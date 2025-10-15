@@ -166,18 +166,52 @@ jobs:
       - name: Package artifacts
         shell: bash
         run: |
+          # Debug: Show what was built
+          echo "Contents of build directory:"
+          ls -la build/ || true
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            ls -la build/Release/ || true
+          fi
+
+          # Find and copy the binary
           mkdir -p dist
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            cp build/Release/${{ matrix.binary_name }} dist/ || cp build/${{ matrix.binary_name }} dist/
+            if [ -f "build/Release/${{ matrix.binary_name }}" ]; then
+              cp build/Release/${{ matrix.binary_name }} dist/
+              echo "Copied from build/Release/"
+            elif [ -f "build/${{ matrix.binary_name }}" ]; then
+              cp build/${{ matrix.binary_name }} dist/
+              echo "Copied from build/"
+            else
+              echo "ERROR: Binary not found!"
+              exit 1
+            fi
           else
-            cp build/${{ matrix.binary_name }} dist/
+            if [ -f "build/${{ matrix.binary_name }}" ]; then
+              cp build/${{ matrix.binary_name }} dist/
+              echo "Copied from build/"
+            else
+              echo "ERROR: Binary not found!"
+              exit 1
+            fi
           fi
+
+          # Verify binary was copied
+          echo "Contents of dist:"
+          ls -la dist/
+
+          # Create archive
           cd dist
           if [ "${{ matrix.platform }}" = "windows" ]; then
             7z a ../${{ matrix.artifact_name }}.zip *
           else
             tar -czf ../${{ matrix.artifact_name }}.tar.gz *
           fi
+          cd ..
+
+          # Verify archive was created
+          echo "Archive created:"
+          ls -lh ${{ matrix.artifact_name }}.*
 
       - name: Upload Linux/macOS Release Asset
         if: matrix.platform != 'windows'
