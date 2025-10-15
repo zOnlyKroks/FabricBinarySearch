@@ -129,29 +129,6 @@ jobs:
             wayland-protocols \
             libxkbcommon-dev
 
-      - name: Install Linux ARM64 cross-compilation tools
-        if: matrix.platform == 'linux' && matrix.arch == 'arm64'
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install -y \
-            gcc-aarch64-linux-gnu \
-            g++-aarch64-linux-gnu \
-            wayland-scanner++ \
-            libgl1-mesa-dev:arm64 \
-            libglu1-mesa-dev:arm64 \
-            libx11-dev:arm64 \
-            libxrandr-dev:arm64 \
-            libxinerama-dev:arm64 \
-            libxcursor-dev:arm64 \
-            libxi-dev:arm64 \
-            libxxf86vm-dev:arm64 \
-            libwayland-dev:arm64 \
-            libxkbcommon-dev:arm64
-          echo "CC=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
-          echo "CXX=aarch64-linux-gnu-g++" >> $GITHUB_ENV
-          echo "PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig" >> $GITHUB_ENV
-
       - name: Install vcpkg dependencies
         run: |
           ${{ github.workspace }}/vcpkg/vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
@@ -213,27 +190,15 @@ jobs:
           echo "Archive created:"
           ls -lh ${{ matrix.artifact_name }}.*
 
-      - name: Upload Linux/macOS Release Asset
-        if: matrix.platform != 'windows'
-        uses: actions/upload-release-asset@v1
+      - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.artifact_name }}.tar.gz
-          asset_name: ${{ matrix.artifact_name }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Windows Release Asset
-        if: matrix.platform == 'windows'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.artifact_name }}.zip
-          asset_name: ${{ matrix.artifact_name }}.zip
-          asset_content_type: application/zip
+        run: |
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            gh release upload ${{ github.event.inputs.version }} ${{ matrix.artifact_name }}.zip --clobber
+          else
+            gh release upload ${{ github.event.inputs.version }} ${{ matrix.artifact_name }}.tar.gz --clobber
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
