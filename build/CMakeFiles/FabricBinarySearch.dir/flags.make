@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DBUILD_GUI
 
-CXX_INCLUDES = -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/backends -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/json-src/include -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/glfw-src/include
+CXX_INCLUDES = -I/Users/finnrades/CLionProjects/FabricBinarySearch/include -I/Users/finnrades/CLionProjects/FabricBinarySearch/include/core -I/Users/finnrades/CLionProjects/FabricBinarySearch/include/utils -I/Users/finnrades/CLionProjects/FabricBinarySearch/include/gui -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/backends -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/json-src/include -I/Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/glfw-src/include
 
 CXX_FLAGSarm64 = -std=gnu++20 -arch arm64
 

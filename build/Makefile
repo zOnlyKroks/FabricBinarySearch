@@ -65,6 +65,26 @@ CMAKE_BINARY_DIR = /Users/finnrades/CLionProjects/FabricBinarySearch/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target package
+package: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
+	/opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+.PHONY : package
+
+# Special rule for the target package
+package/fast: package
+.PHONY : package/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
+	/opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake /Users/finnrades/CLionProjects/FabricBinarySearch/build/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+.PHONY : package_source/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
@@ -212,174 +232,6 @@ update_mappings: cmake_check_build_system
 update_mappings/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/glfw-build/src/CMakeFiles/update_mappings.dir/build.make _deps/glfw-build/src/CMakeFiles/update_mappings.dir/build
 .PHONY : update_mappings/fast
-
-BinarySearchEngine.o: BinarySearchEngine.cpp.o
-.PHONY : BinarySearchEngine.o
-
-# target to build an object file
-BinarySearchEngine.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o
-.PHONY : BinarySearchEngine.cpp.o
-
-BinarySearchEngine.i: BinarySearchEngine.cpp.i
-.PHONY : BinarySearchEngine.i
-
-# target to preprocess a source file
-BinarySearchEngine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.i
-.PHONY : BinarySearchEngine.cpp.i
-
-BinarySearchEngine.s: BinarySearchEngine.cpp.s
-.PHONY : BinarySearchEngine.s
-
-# target to generate assembly for a file
-BinarySearchEngine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.s
-.PHONY : BinarySearchEngine.cpp.s
-
-CrashLogParser.o: CrashLogParser.cpp.o
-.PHONY : CrashLogParser.o
-
-# target to build an object file
-CrashLogParser.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o
-.PHONY : CrashLogParser.cpp.o
-
-CrashLogParser.i: CrashLogParser.cpp.i
-.PHONY : CrashLogParser.i
-
-# target to preprocess a source file
-CrashLogParser.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.i
-.PHONY : CrashLogParser.cpp.i
-
-CrashLogParser.s: CrashLogParser.cpp.s
-.PHONY : CrashLogParser.s
-
-# target to generate assembly for a file
-CrashLogParser.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.s
-.PHONY : CrashLogParser.cpp.s
-
-GuiApp.o: GuiApp.cpp.o
-.PHONY : GuiApp.o
-
-# target to build an object file
-GuiApp.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o
-.PHONY : GuiApp.cpp.o
-
-GuiApp.i: GuiApp.cpp.i
-.PHONY : GuiApp.i
-
-# target to preprocess a source file
-GuiApp.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.i
-.PHONY : GuiApp.cpp.i
-
-GuiApp.s: GuiApp.cpp.s
-.PHONY : GuiApp.s
-
-# target to generate assembly for a file
-GuiApp.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.s
-.PHONY : GuiApp.cpp.s
-
-JarReader.o: JarReader.cpp.o
-.PHONY : JarReader.o
-
-# target to build an object file
-JarReader.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o
-.PHONY : JarReader.cpp.o
-
-JarReader.i: JarReader.cpp.i
-.PHONY : JarReader.i
-
-# target to preprocess a source file
-JarReader.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.i
-.PHONY : JarReader.cpp.i
-
-JarReader.s: JarReader.cpp.s
-.PHONY : JarReader.s
-
-# target to generate assembly for a file
-JarReader.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.s
-.PHONY : JarReader.cpp.s
-
-MinecraftLauncher.o: MinecraftLauncher.cpp.o
-.PHONY : MinecraftLauncher.o
-
-# target to build an object file
-MinecraftLauncher.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o
-.PHONY : MinecraftLauncher.cpp.o
-
-MinecraftLauncher.i: MinecraftLauncher.cpp.i
-.PHONY : MinecraftLauncher.i
-
-# target to preprocess a source file
-MinecraftLauncher.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.i
-.PHONY : MinecraftLauncher.cpp.i
-
-MinecraftLauncher.s: MinecraftLauncher.cpp.s
-.PHONY : MinecraftLauncher.s
-
-# target to generate assembly for a file
-MinecraftLauncher.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.s
-.PHONY : MinecraftLauncher.cpp.s
-
-ModInfo.o: ModInfo.cpp.o
-.PHONY : ModInfo.o
-
-# target to build an object file
-ModInfo.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o
-.PHONY : ModInfo.cpp.o
-
-ModInfo.i: ModInfo.cpp.i
-.PHONY : ModInfo.i
-
-# target to preprocess a source file
-ModInfo.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.i
-.PHONY : ModInfo.cpp.i
-
-ModInfo.s: ModInfo.cpp.s
-.PHONY : ModInfo.s
-
-# target to generate assembly for a file
-ModInfo.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.s
-.PHONY : ModInfo.cpp.s
-
-ModManager.o: ModManager.cpp.o
-.PHONY : ModManager.o
-
-# target to build an object file
-ModManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o
-.PHONY : ModManager.cpp.o
-
-ModManager.i: ModManager.cpp.i
-.PHONY : ModManager.i
-
-# target to preprocess a source file
-ModManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.i
-.PHONY : ModManager.cpp.i
-
-ModManager.s: ModManager.cpp.s
-.PHONY : ModManager.s
-
-# target to generate assembly for a file
-ModManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.s
-.PHONY : ModManager.cpp.s
 
 _deps/imgui-src/backends/imgui_impl_glfw.o: _deps/imgui-src/backends/imgui_impl_glfw.cpp.o
 .PHONY : _deps/imgui-src/backends/imgui_impl_glfw.o
@@ -549,29 +401,269 @@ _deps/imgui-src/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.s
 .PHONY : _deps/imgui-src/imgui_widgets.cpp.s
 
-main.o: main.cpp.o
-.PHONY : main.o
+src/core/BinarySearchEngine.o: src/core/BinarySearchEngine.cpp.o
+.PHONY : src/core/BinarySearchEngine.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/core/BinarySearchEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o
+.PHONY : src/core/BinarySearchEngine.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+src/core/BinarySearchEngine.i: src/core/BinarySearchEngine.cpp.i
+.PHONY : src/core/BinarySearchEngine.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/core/BinarySearchEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.i
+.PHONY : src/core/BinarySearchEngine.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+src/core/BinarySearchEngine.s: src/core/BinarySearchEngine.cpp.s
+.PHONY : src/core/BinarySearchEngine.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/core/BinarySearchEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.s
+.PHONY : src/core/BinarySearchEngine.cpp.s
+
+src/core/ModManager.o: src/core/ModManager.cpp.o
+.PHONY : src/core/ModManager.o
+
+# target to build an object file
+src/core/ModManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o
+.PHONY : src/core/ModManager.cpp.o
+
+src/core/ModManager.i: src/core/ModManager.cpp.i
+.PHONY : src/core/ModManager.i
+
+# target to preprocess a source file
+src/core/ModManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.i
+.PHONY : src/core/ModManager.cpp.i
+
+src/core/ModManager.s: src/core/ModManager.cpp.s
+.PHONY : src/core/ModManager.s
+
+# target to generate assembly for a file
+src/core/ModManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.s
+.PHONY : src/core/ModManager.cpp.s
+
+src/gui/GuiApp.o: src/gui/GuiApp.cpp.o
+.PHONY : src/gui/GuiApp.o
+
+# target to build an object file
+src/gui/GuiApp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o
+.PHONY : src/gui/GuiApp.cpp.o
+
+src/gui/GuiApp.i: src/gui/GuiApp.cpp.i
+.PHONY : src/gui/GuiApp.i
+
+# target to preprocess a source file
+src/gui/GuiApp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.i
+.PHONY : src/gui/GuiApp.cpp.i
+
+src/gui/GuiApp.s: src/gui/GuiApp.cpp.s
+.PHONY : src/gui/GuiApp.s
+
+# target to generate assembly for a file
+src/gui/GuiApp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.s
+.PHONY : src/gui/GuiApp.cpp.s
+
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
+src/utils/Config.o: src/utils/Config.cpp.o
+.PHONY : src/utils/Config.o
+
+# target to build an object file
+src/utils/Config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o
+.PHONY : src/utils/Config.cpp.o
+
+src/utils/Config.i: src/utils/Config.cpp.i
+.PHONY : src/utils/Config.i
+
+# target to preprocess a source file
+src/utils/Config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.i
+.PHONY : src/utils/Config.cpp.i
+
+src/utils/Config.s: src/utils/Config.cpp.s
+.PHONY : src/utils/Config.s
+
+# target to generate assembly for a file
+src/utils/Config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.s
+.PHONY : src/utils/Config.cpp.s
+
+src/utils/CrashLogParser.o: src/utils/CrashLogParser.cpp.o
+.PHONY : src/utils/CrashLogParser.o
+
+# target to build an object file
+src/utils/CrashLogParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o
+.PHONY : src/utils/CrashLogParser.cpp.o
+
+src/utils/CrashLogParser.i: src/utils/CrashLogParser.cpp.i
+.PHONY : src/utils/CrashLogParser.i
+
+# target to preprocess a source file
+src/utils/CrashLogParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.i
+.PHONY : src/utils/CrashLogParser.cpp.i
+
+src/utils/CrashLogParser.s: src/utils/CrashLogParser.cpp.s
+.PHONY : src/utils/CrashLogParser.s
+
+# target to generate assembly for a file
+src/utils/CrashLogParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.s
+.PHONY : src/utils/CrashLogParser.cpp.s
+
+src/utils/JarReader.o: src/utils/JarReader.cpp.o
+.PHONY : src/utils/JarReader.o
+
+# target to build an object file
+src/utils/JarReader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o
+.PHONY : src/utils/JarReader.cpp.o
+
+src/utils/JarReader.i: src/utils/JarReader.cpp.i
+.PHONY : src/utils/JarReader.i
+
+# target to preprocess a source file
+src/utils/JarReader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.i
+.PHONY : src/utils/JarReader.cpp.i
+
+src/utils/JarReader.s: src/utils/JarReader.cpp.s
+.PHONY : src/utils/JarReader.s
+
+# target to generate assembly for a file
+src/utils/JarReader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.s
+.PHONY : src/utils/JarReader.cpp.s
+
+src/utils/Logger.o: src/utils/Logger.cpp.o
+.PHONY : src/utils/Logger.o
+
+# target to build an object file
+src/utils/Logger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o
+.PHONY : src/utils/Logger.cpp.o
+
+src/utils/Logger.i: src/utils/Logger.cpp.i
+.PHONY : src/utils/Logger.i
+
+# target to preprocess a source file
+src/utils/Logger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.i
+.PHONY : src/utils/Logger.cpp.i
+
+src/utils/Logger.s: src/utils/Logger.cpp.s
+.PHONY : src/utils/Logger.s
+
+# target to generate assembly for a file
+src/utils/Logger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.s
+.PHONY : src/utils/Logger.cpp.s
+
+src/utils/MinecraftLauncher.o: src/utils/MinecraftLauncher.cpp.o
+.PHONY : src/utils/MinecraftLauncher.o
+
+# target to build an object file
+src/utils/MinecraftLauncher.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o
+.PHONY : src/utils/MinecraftLauncher.cpp.o
+
+src/utils/MinecraftLauncher.i: src/utils/MinecraftLauncher.cpp.i
+.PHONY : src/utils/MinecraftLauncher.i
+
+# target to preprocess a source file
+src/utils/MinecraftLauncher.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.i
+.PHONY : src/utils/MinecraftLauncher.cpp.i
+
+src/utils/MinecraftLauncher.s: src/utils/MinecraftLauncher.cpp.s
+.PHONY : src/utils/MinecraftLauncher.s
+
+# target to generate assembly for a file
+src/utils/MinecraftLauncher.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.s
+.PHONY : src/utils/MinecraftLauncher.cpp.s
+
+src/utils/ModInfo.o: src/utils/ModInfo.cpp.o
+.PHONY : src/utils/ModInfo.o
+
+# target to build an object file
+src/utils/ModInfo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o
+.PHONY : src/utils/ModInfo.cpp.o
+
+src/utils/ModInfo.i: src/utils/ModInfo.cpp.i
+.PHONY : src/utils/ModInfo.i
+
+# target to preprocess a source file
+src/utils/ModInfo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.i
+.PHONY : src/utils/ModInfo.cpp.i
+
+src/utils/ModInfo.s: src/utils/ModInfo.cpp.s
+.PHONY : src/utils/ModInfo.s
+
+# target to generate assembly for a file
+src/utils/ModInfo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.s
+.PHONY : src/utils/ModInfo.cpp.s
+
+src/utils/ProgressState.o: src/utils/ProgressState.cpp.o
+.PHONY : src/utils/ProgressState.o
+
+# target to build an object file
+src/utils/ProgressState.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o
+.PHONY : src/utils/ProgressState.cpp.o
+
+src/utils/ProgressState.i: src/utils/ProgressState.cpp.i
+.PHONY : src/utils/ProgressState.i
+
+# target to preprocess a source file
+src/utils/ProgressState.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.i
+.PHONY : src/utils/ProgressState.cpp.i
+
+src/utils/ProgressState.s: src/utils/ProgressState.cpp.s
+.PHONY : src/utils/ProgressState.s
+
+# target to generate assembly for a file
+src/utils/ProgressState.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FabricBinarySearch.dir/build.make CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.s
+.PHONY : src/utils/ProgressState.cpp.s
 
 # Help Target
 help:
@@ -584,32 +676,13 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... package"
+	@echo "... package_source"
 	@echo "... rebuild_cache"
 	@echo "... uninstall"
 	@echo "... update_mappings"
 	@echo "... FabricBinarySearch"
 	@echo "... glfw"
-	@echo "... BinarySearchEngine.o"
-	@echo "... BinarySearchEngine.i"
-	@echo "... BinarySearchEngine.s"
-	@echo "... CrashLogParser.o"
-	@echo "... CrashLogParser.i"
-	@echo "... CrashLogParser.s"
-	@echo "... GuiApp.o"
-	@echo "... GuiApp.i"
-	@echo "... GuiApp.s"
-	@echo "... JarReader.o"
-	@echo "... JarReader.i"
-	@echo "... JarReader.s"
-	@echo "... MinecraftLauncher.o"
-	@echo "... MinecraftLauncher.i"
-	@echo "... MinecraftLauncher.s"
-	@echo "... ModInfo.o"
-	@echo "... ModInfo.i"
-	@echo "... ModInfo.s"
-	@echo "... ModManager.o"
-	@echo "... ModManager.i"
-	@echo "... ModManager.s"
 	@echo "... _deps/imgui-src/backends/imgui_impl_glfw.o"
 	@echo "... _deps/imgui-src/backends/imgui_impl_glfw.i"
 	@echo "... _deps/imgui-src/backends/imgui_impl_glfw.s"
@@ -631,9 +704,39 @@ help:
 	@echo "... _deps/imgui-src/imgui_widgets.o"
 	@echo "... _deps/imgui-src/imgui_widgets.i"
 	@echo "... _deps/imgui-src/imgui_widgets.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... src/core/BinarySearchEngine.o"
+	@echo "... src/core/BinarySearchEngine.i"
+	@echo "... src/core/BinarySearchEngine.s"
+	@echo "... src/core/ModManager.o"
+	@echo "... src/core/ModManager.i"
+	@echo "... src/core/ModManager.s"
+	@echo "... src/gui/GuiApp.o"
+	@echo "... src/gui/GuiApp.i"
+	@echo "... src/gui/GuiApp.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/utils/Config.o"
+	@echo "... src/utils/Config.i"
+	@echo "... src/utils/Config.s"
+	@echo "... src/utils/CrashLogParser.o"
+	@echo "... src/utils/CrashLogParser.i"
+	@echo "... src/utils/CrashLogParser.s"
+	@echo "... src/utils/JarReader.o"
+	@echo "... src/utils/JarReader.i"
+	@echo "... src/utils/JarReader.s"
+	@echo "... src/utils/Logger.o"
+	@echo "... src/utils/Logger.i"
+	@echo "... src/utils/Logger.s"
+	@echo "... src/utils/MinecraftLauncher.o"
+	@echo "... src/utils/MinecraftLauncher.i"
+	@echo "... src/utils/MinecraftLauncher.s"
+	@echo "... src/utils/ModInfo.o"
+	@echo "... src/utils/ModInfo.i"
+	@echo "... src/utils/ModInfo.s"
+	@echo "... src/utils/ProgressState.o"
+	@echo "... src/utils/ProgressState.i"
+	@echo "... src/utils/ProgressState.s"
 .PHONY : help
 
 

@@ -22,6 +22,9 @@ set(UTILS_SOURCES
     src/utils/JarReader.cpp
     src/utils/CrashLogParser.cpp
     src/utils/MinecraftLauncher.cpp
+    src/utils/Logger.cpp
+    src/utils/Config.cpp
+    src/utils/ProgressState.cpp
 )
 
 set(SOURCES
@@ -94,3 +97,26 @@ if(BUILD_GUI)
         target_link_libraries(FabricBinarySearch PRIVATE opengl32)
     endif()
 endif()
+
+# Installation targets
+install(TARGETS FabricBinarySearch
+    RUNTIME DESTINATION bin
+)
+
+# CPack configuration for packaging
+set(CPACK_PACKAGE_NAME "FabricBinarySearch")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VENDOR "FabricBinarySearch")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fabric Mod Binary Search Tool")
+set(CPACK_PACKAGE_EXECUTABLES "FabricBinarySearch" "Fabric Binary Search")
+
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP;NSIS")
+elseif(APPLE)
+    set(CPACK_GENERATOR "ZIP;DragNDrop")
+else()
+    set(CPACK_GENERATOR "TGZ;DEB;RPM")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "FabricBinarySearch")
+endif()
+
+include(CPack)

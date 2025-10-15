@@ -72,108 +72,150 @@ include CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/codegen:
 .PHONY : CMakeFiles/FabricBinarySearch.dir/codegen
 
-CMakeFiles/FabricBinarySearch.dir/main.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/main.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/main.cpp
-CMakeFiles/FabricBinarySearch.dir/main.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/FabricBinarySearch.dir/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/main.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/main.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/main.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/main.cpp
+CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/main.cpp
+CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/main.cpp
 
-CMakeFiles/FabricBinarySearch.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/main.cpp > CMakeFiles/FabricBinarySearch.dir/main.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/main.cpp > CMakeFiles/FabricBinarySearch.dir/src/main.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/main.cpp -o CMakeFiles/FabricBinarySearch.dir/main.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/main.cpp -o CMakeFiles/FabricBinarySearch.dir/src/main.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/ModInfo.cpp
-CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/ModInfo.cpp
+CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/ModManager.cpp
+CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/ModManager.cpp
 
-CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/ModInfo.cpp > CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/ModManager.cpp > CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/ModInfo.cpp -o CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/ModManager.cpp -o CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/JarReader.cpp
-CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/JarReader.cpp
+CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/BinarySearchEngine.cpp
+CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/BinarySearchEngine.cpp
 
-CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/JarReader.cpp > CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/BinarySearchEngine.cpp > CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/JarReader.cpp -o CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/core/BinarySearchEngine.cpp -o CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/CrashLogParser.cpp
-CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/CrashLogParser.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ModInfo.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ModInfo.cpp
 
-CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/CrashLogParser.cpp > CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ModInfo.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/CrashLogParser.cpp -o CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ModInfo.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/ModManager.cpp
-CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/ModManager.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/JarReader.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/JarReader.cpp
 
-CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/ModManager.cpp > CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/JarReader.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/ModManager.cpp -o CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/JarReader.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/BinarySearchEngine.cpp
-CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/BinarySearchEngine.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/CrashLogParser.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/CrashLogParser.cpp
 
-CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/BinarySearchEngine.cpp > CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/CrashLogParser.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/BinarySearchEngine.cpp -o CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/CrashLogParser.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/MinecraftLauncher.cpp
-CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/MinecraftLauncher.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/MinecraftLauncher.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/MinecraftLauncher.cpp
 
-CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/MinecraftLauncher.cpp > CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/MinecraftLauncher.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/MinecraftLauncher.cpp -o CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/MinecraftLauncher.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.s
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Logger.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Logger.cpp
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Logger.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.i
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Logger.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.s
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Config.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Config.cpp
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Config.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.i
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/Config.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.s
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ProgressState.cpp
+CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ProgressState.cpp
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ProgressState.cpp > CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.i
+
+CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/utils/ProgressState.cpp -o CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.s
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o: _deps/imgui-src/imgui.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/imgui.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.i: cmake_force
@@ -187,7 +229,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.s: cmake_force
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o: _deps/imgui-src/imgui_demo.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/imgui_demo.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.i: cmake_force
@@ -201,7 +243,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.s: cmake_force
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o: _deps/imgui-src/imgui_draw.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/imgui_draw.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.i: cmake_force
@@ -215,7 +257,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.s: cmake_force
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o: _deps/imgui-src/imgui_tables.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/imgui_tables.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.i: cmake_force
@@ -229,7 +271,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tables.cpp.s: cmake_forc
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o: _deps/imgui-src/imgui_widgets.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/imgui_widgets.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.i: cmake_force
@@ -243,7 +285,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.s: cmake_for
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o: _deps/imgui-src/backends/imgui_impl_glfw.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/backends/imgui_impl_glfw.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.i: cmake_force
@@ -257,7 +299,7 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.s
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o: _deps/imgui-src/backends/imgui_impl_opengl3.cpp
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/backends/imgui_impl_opengl3.cpp
 
 CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.i: cmake_force
@@ -268,29 +310,32 @@ CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cp
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/build/_deps/imgui-src/backends/imgui_impl_opengl3.cpp -o CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.s
 
-CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
-CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/GuiApp.cpp
-CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/GuiApp.cpp
+CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o: CMakeFiles/FabricBinarySearch.dir/flags.make
+CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o: /Users/finnrades/CLionProjects/FabricBinarySearch/src/gui/GuiApp.cpp
+CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o: CMakeFiles/FabricBinarySearch.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o -MF CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o.d -o CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o -c /Users/finnrades/CLionProjects/FabricBinarySearch/src/gui/GuiApp.cpp
 
-CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/GuiApp.cpp > CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.i
+CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/finnrades/CLionProjects/FabricBinarySearch/src/gui/GuiApp.cpp > CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.i
 
-CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/GuiApp.cpp -o CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.s
+CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/finnrades/CLionProjects/FabricBinarySearch/src/gui/GuiApp.cpp -o CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.s
 
 # Object files for target FabricBinarySearch
 FabricBinarySearch_OBJECTS = \
-"CMakeFiles/FabricBinarySearch.dir/main.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o" \
+"CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o" \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o" \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o" \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o" \
@@ -298,18 +343,21 @@ FabricBinarySearch_OBJECTS = \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o" \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o" \
 "CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o" \
-"CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o"
+"CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o"
 
 # External object files for target FabricBinarySearch
 FabricBinarySearch_EXTERNAL_OBJECTS =
 
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/main.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/ModInfo.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/JarReader.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/CrashLogParser.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/ModManager.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/BinarySearchEngine.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/MinecraftLauncher.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/main.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/core/ModManager.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/core/BinarySearchEngine.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/ModInfo.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/JarReader.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/CrashLogParser.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/MinecraftLauncher.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/Logger.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/Config.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/utils/ProgressState.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_demo.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_draw.cpp.o
@@ -317,12 +365,12 @@ FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_tabl
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/imgui_widgets.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_glfw.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/_deps/imgui-src/backends/imgui_impl_opengl3.cpp.o
-FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/GuiApp.cpp.o
+FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/src/gui/GuiApp.cpp.o
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/build.make
 FabricBinarySearch: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libz.tbd
 FabricBinarySearch: _deps/glfw-build/src/libglfw3.a
 FabricBinarySearch: CMakeFiles/FabricBinarySearch.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Linking CXX executable FabricBinarySearch"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/finnrades/CLionProjects/FabricBinarySearch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX executable FabricBinarySearch"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/FabricBinarySearch.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

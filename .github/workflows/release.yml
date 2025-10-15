@@ -1,0 +1,172 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+      draft:
+        description: 'Create as draft release'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: false
+
+  build:
+    name: Build ${{ matrix.platform }} ${{ matrix.arch }}
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+            cmake_arch: ''
+            artifact_name: FabricBinarySearch-linux-x64
+            binary_name: FabricBinarySearch
+
+          # Linux ARM64
+          - os: ubuntu-latest
+            platform: linux
+            arch: arm64
+            cmake_arch: '-DCMAKE_SYSTEM_PROCESSOR=aarch64'
+            artifact_name: FabricBinarySearch-linux-arm64
+            binary_name: FabricBinarySearch
+
+          # macOS x64 (Intel)
+          - os: macos-13
+            platform: macos
+            arch: x64
+            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64'
+            artifact_name: FabricBinarySearch-macos-x64
+            binary_name: FabricBinarySearch
+
+          # macOS ARM64 (Apple Silicon)
+          - os: macos-latest
+            platform: macos
+            arch: arm64
+            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=arm64'
+            artifact_name: FabricBinarySearch-macos-arm64
+            binary_name: FabricBinarySearch
+
+          # Windows x64
+          - os: windows-latest
+            platform: windows
+            arch: x64
+            cmake_arch: '-A x64'
+            artifact_name: FabricBinarySearch-windows-x64
+            binary_name: FabricBinarySearch.exe
+
+          # Windows ARM64
+          - os: windows-latest
+            platform: windows
+            arch: arm64
+            cmake_arch: '-A ARM64'
+            artifact_name: FabricBinarySearch-windows-arm64
+            binary_name: FabricBinarySearch.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxxf86vm-dev
+
+      - name: Install Linux ARM64 cross-compilation tools
+        if: matrix.platform == 'linux' && matrix.arch == 'arm64'
+        run: |
+          sudo apt-get install -y \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu
+          echo "CC=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+          echo "CXX=aarch64-linux-gnu-g++" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_arch }}
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Package artifacts
+        shell: bash
+        run: |
+          mkdir -p dist
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            cp build/Release/${{ matrix.binary_name }} dist/ || cp build/${{ matrix.binary_name }} dist/
+          else
+            cp build/${{ matrix.binary_name }} dist/
+          fi
+          cd dist
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            7z a ../${{ matrix.artifact_name }}.zip *
+          else
+            tar -czf ../${{ matrix.artifact_name }}.tar.gz *
+          fi
+
+      - name: Upload Linux/macOS Release Asset
+        if: matrix.platform != 'windows'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.artifact_name }}.tar.gz
+          asset_name: ${{ matrix.artifact_name }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Windows Release Asset
+        if: matrix.platform == 'windows'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./${{ matrix.artifact_name }}.zip
+          asset_name: ${{ matrix.artifact_name }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: dist/*
+          retention-days: 7

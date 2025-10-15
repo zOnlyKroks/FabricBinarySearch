@@ -31,6 +31,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/homebrew/share/cmake/Modules/CMakePackageConfigHelpers.cmake"
   "/opt/homebrew/share/cmake/Modules/CMakeSystemSpecificInformation.cmake"
   "/opt/homebrew/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/opt/homebrew/share/cmake/Modules/CPack.cmake"
+  "/opt/homebrew/share/cmake/Modules/CPackComponent.cmake"
   "/opt/homebrew/share/cmake/Modules/CheckCSourceCompiles.cmake"
   "/opt/homebrew/share/cmake/Modules/CheckIncludeFile.cmake"
   "/opt/homebrew/share/cmake/Modules/CheckLibraryExists.cmake"
@@ -69,6 +71,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/homebrew/share/cmake/Modules/Platform/UnixPaths.cmake"
   "/opt/homebrew/share/cmake/Modules/SelectLibraryConfigurations.cmake"
   "/opt/homebrew/share/cmake/Modules/WriteBasicConfigVersionFile.cmake"
+  "/opt/homebrew/share/cmake/Templates/CPackConfig.cmake.in"
   )
 
 # The corresponding makefile is:
@@ -82,6 +85,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "_deps/json-subbuild/CMakeLists.txt"
   "_deps/glfw-subbuild/CMakeLists.txt"
   "_deps/imgui-subbuild/CMakeLists.txt"
+  "CPackConfig.cmake"
+  "CPackSourceConfig.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   "_deps/json-build/nlohmann_json.pc"
   "_deps/json-build/nlohmann_jsonConfigVersion.cmake"

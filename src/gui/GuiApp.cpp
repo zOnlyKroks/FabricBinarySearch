@@ -52,7 +52,7 @@ bool GuiApp::init() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // Create window
+    // Create resizable window
     window = glfwCreateWindow(1280, 720, "Fabric Binary Search Tool", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -68,6 +68,9 @@ bool GuiApp::init() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+    // Enable persistent layout saving
+    io.IniFilename = "fabricbinarysearch.ini";
 
     ImGui::StyleColorsDark();
 
@@ -141,18 +144,24 @@ void GuiApp::renderMainWindow() {
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-            ImGui::Text("Fabric Binary Search Tool - C++ Edition");
-            ImGui::Text("Find problematic Minecraft mods using binary search");
-            ImGui::Separator();
-            ImGui::Text("Built with Dear ImGui, GLFW, and C++20");
-            if (ImGui::Button("Close")) {
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::EndPopup();
-        }
-
         ImGui::EndMenuBar();
+    }
+
+    // About popup modal
+    if (ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("Fabric Binary Search Tool - C++ Edition");
+        ImGui::Text("Find problematic Minecraft mods using binary search");
+        ImGui::Separator();
+        ImGui::Text("Built with Dear ImGui, GLFW, and C++20");
+        ImGui::Spacing();
+        ImGui::Text("Features:");
+        ImGui::BulletText("Resizable window and panels");
+        ImGui::BulletText("Resizable table columns");
+        ImGui::BulletText("Persistent layout configuration");
+        if (ImGui::Button("Close", ImVec2(120, 0))) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
     }
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
@@ -160,27 +169,56 @@ void GuiApp::renderMainWindow() {
     ImGui::PopFont();
     ImGui::Separator();
 
+    // Use child regions with borders for resizable panels
     ImGui::BeginChild("ContentArea", ImVec2(0, -30), false);
 
-    ImGui::Columns(2, "MainColumns", true);
-    static bool first_time = true;
-    if (first_time) {
-        ImGui::SetColumnWidth(0, 400);
-        first_time = false;
-    }
+    const float availWidth = ImGui::GetContentRegionAvail().x;
+    const float availHeight = ImGui::GetContentRegionAvail().y;
 
+    // Left panel - Setup and Binary Search
+    ImGui::BeginChild("LeftPanel", ImVec2(availWidth * leftPanelWidth, availHeight), true);
+
+    const float leftPanelHeight = ImGui::GetContentRegionAvail().y;
+    ImGui::BeginChild("SetupSection", ImVec2(0, leftPanelHeight * setupPanelHeight), false);
     renderSetupPanel();
+    ImGui::EndChild();
+
+    // Horizontal splitter between Setup and Binary Search
+    renderSplitterHorizontal("LeftSplitter", &setupPanelHeight, 0.2f, 0.2f);
+
+    ImGui::BeginChild("BinarySearchSection", ImVec2(0, 0), false);
     renderBinarySearchPanel();
+    ImGui::EndChild();
 
-    ImGui::NextColumn();
+    ImGui::EndChild();
 
+    // Vertical splitter between Left and Right panels
+    ImGui::SameLine();
+    renderSplitterVertical("MainSplitter", &leftPanelWidth, 0.2f, 0.2f);
+    ImGui::SameLine();
+
+    // Right panel - Mod List and Crash Analysis
+    ImGui::BeginChild("RightPanel", ImVec2(0, availHeight), true);
+
+    const float rightPanelHeight = ImGui::GetContentRegionAvail().y;
+    ImGui::BeginChild("ModListSection", ImVec2(0, rightPanelHeight * modListPanelHeight), false);
     renderModListPanel();
-    renderCrashAnalysisPanel();
+    ImGui::EndChild();
 
-    ImGui::Columns(1);
+    // Horizontal splitter between Mod List and Crash Analysis
+    renderSplitterHorizontal("RightSplitter", &modListPanelHeight, 0.2f, 0.2f);
+
+    ImGui::BeginChild("CrashAnalysisSection", ImVec2(0, 0), false);
+    renderCrashAnalysisPanel();
+    ImGui::EndChild();
+
+    ImGui::EndChild();
+
     ImGui::EndChild();
 
     renderStatusBar();
+
+    renderModMetadataModal();
 
     ImGui::End();
 }
@@ -250,15 +288,18 @@ void GuiApp::renderModListPanel() const {
             return;
         }
 
-        ImGui::BeginChild("ModListChild", ImVec2(0, 300), true);
+        ImGui::BeginChild("ModListChild", ImVec2(0, 0), false);
 
         const auto modsCopy = modManager->getMods();
         auto enabledModIds = modManager->getEnabledModIds();
 
-        if (ImGui::BeginTable("ModsTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+        // Use resizable table
+        if (ImGui::BeginTable("ModsTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg |
+                              ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY)) {
             ImGui::TableSetupColumn("Status", ImGuiTableColumnFlags_WidthFixed, 80);
             ImGui::TableSetupColumn("Mod ID", ImGuiTableColumnFlags_WidthStretch);
             ImGui::TableSetupColumn("Version", ImGuiTableColumnFlags_WidthFixed, 100);
+            ImGui::TableSetupColumn("Info", ImGuiTableColumnFlags_WidthFixed, 60);
             ImGui::TableHeadersRow();
 
             for (const auto& mod : modsCopy) {
@@ -279,6 +320,13 @@ void GuiApp::renderModListPanel() const {
 
                 ImGui::TableNextColumn();
                 ImGui::Text("%s", mod.version.c_str());
+
+                ImGui::TableNextColumn();
+                std::string buttonLabel = "Info##" + mod.id;
+                if (ImGui::SmallButton(buttonLabel.c_str())) {
+                    const_cast<GuiApp*>(this)->selectedModId = mod.id;
+                    const_cast<GuiApp*>(this)->showModMetadata = true;
+                }
             }
 
             ImGui::EndTable();
@@ -790,6 +838,298 @@ void GuiApp::renderInstancePathModal() {
         ImGui::SameLine();
 
         if (ImGui::Button("Cancel", ImVec2(120, 0))) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+bool GuiApp::renderSplitterVertical(const char* id, float* leftWidth, float minLeft, float minRight) {
+    ImGui::PushID(id);
+
+    const ImGuiStyle& style = ImGui::GetStyle();
+    const float splitterWidth = 8.0f;
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.3f, 0.3f, 0.8f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+
+    ImGui::Button("##vsplitter", ImVec2(splitterWidth, -1));
+
+    ImGui::PopStyleColor(3);
+
+    bool changed = false;
+    if (ImGui::IsItemActive()) {
+        const float availWidth = ImGui::GetContentRegionAvail().x + splitterWidth;
+        const float delta = ImGui::GetIO().MouseDelta.x / availWidth;
+
+        float newWidth = *leftWidth + delta;
+        newWidth = std::max(minLeft, std::min(1.0f - minRight, newWidth));
+
+        if (newWidth != *leftWidth) {
+            *leftWidth = newWidth;
+            changed = true;
+        }
+    }
+
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+    }
+
+    ImGui::PopID();
+    return changed;
+}
+
+bool GuiApp::renderSplitterHorizontal(const char* id, float* topHeight, float minTop, float minBottom) {
+    ImGui::PushID(id);
+
+    const float splitterHeight = 8.0f;
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.3f, 0.3f, 0.8f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+
+    ImGui::Button("##hsplitter", ImVec2(-1, splitterHeight));
+
+    ImGui::PopStyleColor(3);
+
+    bool changed = false;
+    if (ImGui::IsItemActive()) {
+        const float availHeight = ImGui::GetContentRegionAvail().y + splitterHeight;
+        const float delta = ImGui::GetIO().MouseDelta.y / availHeight;
+
+        float newHeight = *topHeight + delta;
+        newHeight = std::max(minTop, std::min(1.0f - minBottom, newHeight));
+
+        if (newHeight != *topHeight) {
+            *topHeight = newHeight;
+            changed = true;
+        }
+    }
+
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNS);
+    }
+
+    ImGui::PopID();
+    return changed;
+}
+
+void GuiApp::renderModMetadataModal() {
+    if (showModMetadata) {
+        ImGui::OpenPopup("Mod Metadata");
+        showModMetadata = false;
+    }
+
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(900, 700), ImGuiCond_Appearing);
+
+    if (ImGui::BeginPopupModal("Mod Metadata", nullptr, ImGuiWindowFlags_None)) {
+        if (!modManager || selectedModId.empty()) {
+            ImGui::Text("No mod selected");
+            if (ImGui::Button("Close", ImVec2(120, 0))) {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+            return;
+        }
+
+        // Find the selected mod
+        const auto& mods = modManager->getMods();
+        auto modIt = std::ranges::find_if(mods, [this](const ModInfo& m) {
+            return m.id == selectedModId;
+        });
+
+        if (modIt == mods.end()) {
+            ImGui::Text("Mod not found");
+            if (ImGui::Button("Close", ImVec2(120, 0))) {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+            return;
+        }
+
+        const ModInfo& mod = *modIt;
+
+        ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "%s", mod.name.c_str());
+        ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "ID: %s | Version: %s",
+                          mod.id.c_str(), mod.version.c_str());
+        ImGui::Separator();
+
+        if (ImGui::BeginTabBar("ModMetadataTabs")) {
+            // Overview tab
+            if (ImGui::BeginTabItem("Overview")) {
+                ImGui::BeginChild("OverviewContent", ImVec2(0, -35), true);
+
+                if (!mod.description.empty()) {
+                    ImGui::TextWrapped("%s", mod.description.c_str());
+                    ImGui::Spacing();
+                    ImGui::Separator();
+                    ImGui::Spacing();
+                }
+
+                if (!mod.authors.empty()) {
+                    ImGui::Text("Authors:");
+                    for (const auto& author : mod.authors) {
+                        ImGui::BulletText("%s", author.c_str());
+                    }
+                    ImGui::Spacing();
+                }
+
+                ImGui::Text("Environment: %s", mod.environment.c_str());
+                ImGui::Text("JAR Path: %s", mod.jarPath.c_str());
+                ImGui::Spacing();
+
+                if (!mod.depends.empty()) {
+                    ImGui::Separator();
+                    ImGui::Spacing();
+                    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Dependencies:");
+                    for (const auto& [depId, version] : mod.depends) {
+                        ImGui::BulletText("%s: %s", depId.c_str(), version.c_str());
+                    }
+                    ImGui::Spacing();
+                }
+
+                if (!mod.suggests.empty()) {
+                    ImGui::Separator();
+                    ImGui::Spacing();
+                    ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Suggestions:");
+                    for (const auto& [sugId, version] : mod.suggests) {
+                        ImGui::BulletText("%s: %s", sugId.c_str(), version.c_str());
+                    }
+                }
+
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            // Links tab
+            if (ImGui::BeginTabItem("Links")) {
+                ImGui::BeginChild("LinksContent", ImVec2(0, -35), true);
+
+                bool hasLinks = false;
+
+                if (!mod.homepage.empty()) {
+                    hasLinks = true;
+                    ImGui::Text("Homepage:");
+                    ImGui::SameLine();
+                    ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "%s", mod.homepage.c_str());
+                    if (ImGui::IsItemClicked()) {
+                        std::string command;
+#ifdef __APPLE__
+                        command = "open \"" + mod.homepage + "\"";
+#elif defined(_WIN32)
+                        command = "start \"\" \"" + mod.homepage + "\"";
+#else
+                        command = "xdg-open \"" + mod.homepage + "\"";
+#endif
+                        system(command.c_str());
+                    }
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip("Click to open in browser");
+                    }
+                    ImGui::Spacing();
+                }
+
+                if (!mod.sources.empty()) {
+                    hasLinks = true;
+                    ImGui::Text("Source Code:");
+                    ImGui::SameLine();
+                    ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "%s", mod.sources.c_str());
+                    if (ImGui::IsItemClicked()) {
+                        std::string command;
+#ifdef __APPLE__
+                        command = "open \"" + mod.sources + "\"";
+#elif defined(_WIN32)
+                        command = "start \"\" \"" + mod.sources + "\"";
+#else
+                        command = "xdg-open \"" + mod.sources + "\"";
+#endif
+                        system(command.c_str());
+                    }
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip("Click to open in browser");
+                    }
+                    ImGui::Spacing();
+                }
+
+                if (!mod.issues.empty()) {
+                    hasLinks = true;
+                    ImGui::Text("Issue Tracker:");
+                    ImGui::SameLine();
+                    ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "%s", mod.issues.c_str());
+                    if (ImGui::IsItemClicked()) {
+                        std::string command;
+#ifdef __APPLE__
+                        command = "open \"" + mod.issues + "\"";
+#elif defined(_WIN32)
+                        command = "start \"\" \"" + mod.issues + "\"";
+#else
+                        command = "xdg-open \"" + mod.issues + "\"";
+#endif
+                        system(command.c_str());
+                    }
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip("Click to open in browser");
+                    }
+                    ImGui::Spacing();
+                }
+
+                // Display all other contact fields
+                for (const auto& [key, value] : mod.contact) {
+                    if (key != "homepage" && key != "sources" && key != "issues") {
+                        hasLinks = true;
+                        ImGui::Text("%s:", key.c_str());
+                        ImGui::SameLine();
+                        ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "%s", value.c_str());
+                        if (value.find("http://") == 0 || value.find("https://") == 0) {
+                            if (ImGui::IsItemClicked()) {
+                                std::string command;
+#ifdef __APPLE__
+                                command = "open \"" + value + "\"";
+#elif defined(_WIN32)
+                                command = "start \"\" \"" + value + "\"";
+#else
+                                command = "xdg-open \"" + value + "\"";
+#endif
+                                system(command.c_str());
+                            }
+                            if (ImGui::IsItemHovered()) {
+                                ImGui::SetTooltip("Click to open in browser");
+                            }
+                        }
+                        ImGui::Spacing();
+                    }
+                }
+
+                if (!hasLinks) {
+                    ImGui::TextDisabled("No contact information or links available");
+                }
+
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            // Raw JSON tab
+            if (ImGui::BeginTabItem("fabric.mod.json")) {
+                ImGui::BeginChild("RawJsonContent", ImVec2(0, -35), true);
+
+                ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+                ImGui::TextUnformatted(mod.rawJson.c_str());
+                ImGui::PopFont();
+
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Close", ImVec2(120, 0))) {
             ImGui::CloseCurrentPopup();
         }
 

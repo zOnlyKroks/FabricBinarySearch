@@ -22,6 +22,15 @@ public:
     std::vector<std::string> authors;
     std::string environment;
 
+    // Contact/Links metadata
+    std::string homepage;
+    std::string sources;
+    std::string issues;
+    std::unordered_map<std::string, std::string> contact;
+
+    // Store raw fabric.mod.json for full metadata display
+    std::string rawJson;
+
     bool parseFromJson(const std::string& jsonContent);
 
     [[nodiscard]] bool dependsOn(const std::string& modId) const;

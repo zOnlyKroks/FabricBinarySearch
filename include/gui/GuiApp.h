@@ -40,9 +40,16 @@ private:
     int selectedLogIndex = -1;
     bool showLogSelector = false;
     bool showInstancePathEditor = false;
+    bool showModMetadata = false;
+    std::string selectedModId;
 
     bool isScanning = false;
     bool isAnalyzing = false;
+
+    // Panel sizing
+    float leftPanelWidth = 0.4f;
+    float setupPanelHeight = 0.5f;
+    float modListPanelHeight = 0.6f;
 
     void renderMainWindow();
     void renderSetupPanel();
@@ -64,6 +71,9 @@ private:
     void openFileDialog();
     void renderLogSelectorModal();
     void renderInstancePathModal();
+    void renderModMetadataModal();
+    bool renderSplitterVertical(const char* id, float* leftWidth, float minLeft, float minRight);
+    bool renderSplitterHorizontal(const char* id, float* topHeight, float minTop, float minBottom);
 };
 
 #endif // BUILD_GUI

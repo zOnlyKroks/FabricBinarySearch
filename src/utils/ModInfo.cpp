@@ -43,6 +43,9 @@ bool ModInfo::parseFromJson(const std::string& jsonContent) {
         std::string sanitized = sanitizeJson(jsonContent);
         json j = json::parse(sanitized);
 
+        // Store raw JSON for full metadata display
+        rawJson = j.dump(2);
+
         if (!j.contains("id") || !j.contains("version")) {
             std::cerr << "Missing required fields (id or version) in fabric.mod.json" << std::endl;
             return false;
@@ -110,6 +113,28 @@ bool ModInfo::parseFromJson(const std::string& jsonContent) {
 
         parseDependencies(j, "depends", depends);
         parseDependencies(j, "suggests", suggests);
+
+        // Parse contact/links metadata
+        if (j.contains("contact")) {
+            const auto& contactObj = j["contact"];
+            if (contactObj.is_object()) {
+                if (contactObj.contains("homepage")) {
+                    homepage = contactObj["homepage"].get<std::string>();
+                }
+                if (contactObj.contains("sources")) {
+                    sources = contactObj["sources"].get<std::string>();
+                }
+                if (contactObj.contains("issues")) {
+                    issues = contactObj["issues"].get<std::string>();
+                }
+                // Store all contact fields
+                for (auto it = contactObj.begin(); it != contactObj.end(); ++it) {
+                    if (it.value().is_string()) {
+                        contact[it.key()] = it.value().get<std::string>();
+                    }
+                }
+            }
+        }
 
         return true;
 
