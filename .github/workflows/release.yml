@@ -49,6 +49,7 @@ jobs:
             platform: linux
             arch: x64
             cmake_arch: ''
+            vcpkg_triplet: x64-linux
             artifact_name: FabricBinarySearch-linux-x64
             binary_name: FabricBinarySearch
 
@@ -57,6 +58,7 @@ jobs:
             platform: linux
             arch: arm64
             cmake_arch: '-DCMAKE_SYSTEM_PROCESSOR=aarch64'
+            vcpkg_triplet: arm64-linux
             artifact_name: FabricBinarySearch-linux-arm64
             binary_name: FabricBinarySearch
 
@@ -65,6 +67,7 @@ jobs:
             platform: macos
             arch: x64
             cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64'
+            vcpkg_triplet: x64-osx
             artifact_name: FabricBinarySearch-macos-x64
             binary_name: FabricBinarySearch
 
@@ -73,6 +76,7 @@ jobs:
             platform: macos
             arch: arm64
             cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=arm64'
+            vcpkg_triplet: arm64-osx
             artifact_name: FabricBinarySearch-macos-arm64
             binary_name: FabricBinarySearch
 
@@ -81,6 +85,7 @@ jobs:
             platform: windows
             arch: x64
             cmake_arch: '-A x64'
+            vcpkg_triplet: x64-windows-static
             artifact_name: FabricBinarySearch-windows-x64
             binary_name: FabricBinarySearch.exe
 
@@ -89,6 +94,7 @@ jobs:
             platform: windows
             arch: arm64
             cmake_arch: '-A ARM64'
+            vcpkg_triplet: arm64-windows-static
             artifact_name: FabricBinarySearch-windows-arm64
             binary_name: FabricBinarySearch.exe
 
@@ -97,6 +103,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef6'
 
       - name: Install Linux dependencies
         if: matrix.platform == 'linux'
@@ -123,9 +134,13 @@ jobs:
           echo "CC=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
           echo "CXX=aarch64-linux-gnu-g++" >> $GITHUB_ENV
 
+      - name: Install vcpkg dependencies
+        run: |
+          ${{ github.workspace }}/vcpkg/vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
+
       - name: Configure CMake
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_arch }}
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }} ${{ matrix.cmake_arch }}
 
       - name: Build
         run: cmake --build build --config Release
