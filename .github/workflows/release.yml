@@ -23,6 +23,16 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       release_id: ${{ steps.create_release.outputs.id }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Delete existing release if exists
+        continue-on-error: true
+        run: |
+          gh release delete ${{ github.event.inputs.version }} --yes --cleanup-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
