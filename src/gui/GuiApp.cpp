@@ -238,7 +238,7 @@ void GuiApp::renderSetupPanel() {
 
         if (ImGui::InputText("##instancePath", instanceBuf, sizeof(instanceBuf))) {
             instancePath = instanceBuf;
-            modsPath = fs::path(instancePath) / "mods";
+            modsPath = (fs::path(instancePath) / "mods").string();
         }
 
         ImGui::SameLine();
