@@ -88,6 +88,14 @@ std::string Config::getConfigPath() const {
     return configFilePath.string();
 }
 
+std::string Config::getLaunchCommand() const {
+    return configData.value("launchCommand", "");
+}
+
+void Config::setLaunchCommand(const std::string& command) {
+    configData["launchCommand"] = command;
+}
+
 void Config::reset() {
     initializeDefaults();
     save();
@@ -98,6 +106,7 @@ void Config::initializeDefaults() {
         {"lastInstancePath", ""},
         {"logLevel", "info"},
         {"autoSaveProgress", true},
+        {"launchCommand", ""},
         {"version", "1.0.0"}
     };
 }

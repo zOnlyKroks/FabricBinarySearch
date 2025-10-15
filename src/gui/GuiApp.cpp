@@ -2,6 +2,7 @@
 
 #include "GuiApp.h"
 #include "MinecraftLauncher.h"
+#include "Config.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -128,6 +129,10 @@ void GuiApp::renderMainWindow() {
 
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Settings...")) {
+                showSettings = true;
+            }
+            ImGui::Separator();
             if (ImGui::MenuItem("Reset All", nullptr, false, modsScanned)) {
                 resetSearch();
             }
@@ -219,6 +224,7 @@ void GuiApp::renderMainWindow() {
     renderStatusBar();
 
     renderModMetadataModal();
+    renderSettingsModal();
 
     ImGui::End();
 }
@@ -1130,6 +1136,79 @@ void GuiApp::renderModMetadataModal() {
         ImGui::Separator();
 
         if (ImGui::Button("Close", ImVec2(120, 0))) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void GuiApp::renderSettingsModal() {
+    if (showSettings) {
+        ImGui::OpenPopup("Settings");
+        showSettings = false;
+    }
+
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(700, 400), ImGuiCond_Appearing);
+
+    if (ImGui::BeginPopupModal("Settings", nullptr, ImGuiWindowFlags_NoResize)) {
+        ImGui::TextColored(ImVec4(0.4f, 0.8f, 1.0f, 1.0f), "Application Settings");
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        static char launchCommandBuf[1024];
+
+        if (ImGui::BeginTabBar("SettingsTabs")) {
+            if (ImGui::BeginTabItem("Launcher")) {
+                ImGui::BeginChild("LauncherSettings", ImVec2(0, -40), true);
+
+                ImGui::TextWrapped("Custom Launch Command:");
+                ImGui::Spacing();
+                ImGui::TextWrapped("Leave empty to use the built-in launcher. Enter a custom command to override it.");
+                ImGui::TextWrapped("This is useful for third-party launchers or custom launch configurations.");
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+
+                if (ImGui::IsWindowAppearing()) {
+                    std::string currentCommand = Config::getInstance().getLaunchCommand();
+                    strncpy(launchCommandBuf, currentCommand.c_str(), sizeof(launchCommandBuf) - 1);
+                    launchCommandBuf[sizeof(launchCommandBuf) - 1] = '\0';
+                }
+
+                ImGui::Text("Launch Command:");
+                ImGui::SetNextItemWidth(-1);
+                ImGui::InputTextMultiline("##launchCommand", launchCommandBuf, sizeof(launchCommandBuf), ImVec2(-1, 100));
+
+                ImGui::Spacing();
+                ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Example: /path/to/your/launcher --instance YourInstance");
+                ImGui::Spacing();
+
+                if (ImGui::Button("Clear", ImVec2(120, 0))) {
+                    launchCommandBuf[0] = '\0';
+                }
+
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Save", ImVec2(120, 0))) {
+            Config::getInstance().setLaunchCommand(launchCommandBuf);
+            Config::getInstance().save();
+            statusMessage = "Settings saved successfully!";
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) {
             ImGui::CloseCurrentPopup();
         }
 

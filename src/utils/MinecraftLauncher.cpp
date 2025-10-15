@@ -1,4 +1,5 @@
 #include "MinecraftLauncher.h"
+#include "Config.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -195,18 +196,19 @@ void MinecraftLauncher::collectLibrariesFromVersion(const std::string& version, 
                     std::string artifact = libName.substr(colon1 + 1, colon2 - colon1 - 1);
                     std::string version = libName.substr(colon2 + 1);
 
-                    std::string libraryKey = group + ":";
-                    libraryKey.append(version);
+                    std::string libraryKey = group + ":" + artifact;
 
                     if (addedLibraries.contains(libraryKey)) {
+                        std::cout << "  Skipping duplicate library: " << libName << " (already have " << libraryKey << ")" << std::endl;
                         continue;
                     }
+
+                    addedLibraries.insert(libraryKey);
 
                     std::ranges::replace(group, '.', '/');
 
                     if (fs::path libPath = librariesPath / group / artifact / version / (artifact + "-" + version + ".jar"); fs::exists(libPath)) {
                         classpathEntries.push_back(libPath.string());
-                        addedLibraries.insert(libraryKey);
                     }
                 }
             }
@@ -277,6 +279,29 @@ bool MinecraftLauncher::launch() const {
         return false;
     }
 
+    std::string customCommand = Config::getInstance().getLaunchCommand();
+    if (!customCommand.empty()) {
+        std::cout << "\nExecuting custom launch command..." << std::endl;
+        std::cout << "Command: " << customCommand << std::endl;
+
+#ifdef _WIN32
+        std::string windowsCmd = "start /B cmd /C \"" + customCommand + "\"";
+        int result = system(windowsCmd.c_str());
+#else
+        std::string unixCmd = customCommand + " &";
+        int result = system(unixCmd.c_str());
+#endif
+
+        if (result == 0) {
+            std::cout << "\nMinecraft launched successfully!" << std::endl;
+            std::cout << "Please test for the issue, then type 'success' or 'failure'" << std::endl;
+            return true;
+        } else {
+            std::cerr << "Failed to launch Minecraft (exit code: " << result << ")" << std::endl;
+            return false;
+        }
+    }
+
     std::string javaPath = findJava();
     std::string version = findVersion();
 
@@ -293,7 +318,7 @@ bool MinecraftLauncher::launch() const {
 
     for (const auto& arg : getJvmArgs()) {
         if (arg.find("-Djava.library.path=") == 0) {
-            std::string path = arg.substr(20); // Length of "-Djava.library.path="
+            std::string path = arg.substr(20);
             cmd << " \"-Djava.library.path=" << path << "\"";
         } else {
             cmd << " " << arg;
@@ -313,12 +338,14 @@ bool MinecraftLauncher::launch() const {
     std::cout << "Command: " << cmd.str() << std::endl;
 
 #ifdef _WIN32
-    cmd << " &";
+    std::string windowsCmd = "start /B cmd /C \"" + cmd.str() + "\"";
+    int result = system(windowsCmd.c_str());
 #else
-    cmd << " &";
+    std::string unixCmd = cmd.str() + " &";
+    int result = system(unixCmd.c_str());
 #endif
 
-    if (int result = system(cmd.str().c_str()); result == 0) {
+    if (result == 0) {
         std::cout << "\nMinecraft launched successfully!" << std::endl;
         std::cout << "Please test for the issue, then type 'success' or 'failure'" << std::endl;
         return true;

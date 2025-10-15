@@ -41,6 +41,7 @@ private:
     bool showLogSelector = false;
     bool showInstancePathEditor = false;
     bool showModMetadata = false;
+    bool showSettings = false;
     std::string selectedModId;
 
     bool isScanning = false;
@@ -72,6 +73,7 @@ private:
     void renderLogSelectorModal();
     void renderInstancePathModal();
     void renderModMetadataModal();
+    void renderSettingsModal();
     bool renderSplitterVertical(const char* id, float* leftWidth, float minLeft, float minRight);
     bool renderSplitterHorizontal(const char* id, float* topHeight, float minTop, float minBottom);
 };

@@ -26,6 +26,9 @@ public:
 
     std::string getConfigPath() const;
 
+    std::string getLaunchCommand() const;
+    void setLaunchCommand(const std::string& command);
+
     void reset();
 
     Config(const Config&) = delete;
