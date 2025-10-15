@@ -163,34 +163,6 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      - name: Sign Windows executable
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: |
-          # Create a self-signed certificate for code signing
-          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=FabricBinarySearch" -KeyAlgorithm RSA -KeyLength 2048 -CertStoreLocation "Cert:\CurrentUser\My"
-
-          # Find the built executable
-          $exePath = if (Test-Path "build/Release/${{ matrix.binary_name }}") {
-            "build/Release/${{ matrix.binary_name }}"
-          } else {
-            "build/${{ matrix.binary_name }}"
-          }
-
-          # Sign the executable
-          $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe"
-          if (-not (Test-Path $signtool)) {
-            # Try to find signtool in PATH
-            $signtool = (Get-Command signtool.exe -ErrorAction SilentlyContinue).Source
-          }
-
-          if ($signtool) {
-            & $signtool sign /fd SHA256 /a /n "FabricBinarySearch" /t http://timestamp.digicert.com $exePath
-            Write-Host "Executable signed successfully"
-          } else {
-            Write-Host "Warning: signtool not found, skipping signing"
-          }
-
       - name: Package artifacts
         shell: bash
         run: |

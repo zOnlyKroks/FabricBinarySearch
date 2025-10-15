@@ -6,7 +6,13 @@
 #include <zlib.h>
 
 // ZIP file format structures
-#pragma pack(push, 1)
+#if defined(__GNUC__) || defined(__clang__)
+    #define PACKED __attribute__((packed))
+#else
+    #define PACKED
+    #pragma pack(push, 1)
+#endif
+
 struct ZipLocalFileHeader {
     uint32_t signature;           // 0x04034b50
     uint16_t versionNeeded;
@@ -19,7 +25,7 @@ struct ZipLocalFileHeader {
     uint32_t uncompressedSize;
     uint16_t filenameLength;
     uint16_t extraFieldLength;
-};
+} PACKED;
 
 struct ZipCentralDirEntry {
     uint32_t signature;           // 0x02014b50
@@ -39,7 +45,7 @@ struct ZipCentralDirEntry {
     uint16_t internalAttr;
     uint32_t externalAttr;
     uint32_t localHeaderOffset;
-};
+} PACKED;
 
 struct ZipEndOfCentralDir {
     uint32_t signature;           // 0x06054b50
@@ -50,8 +56,12 @@ struct ZipEndOfCentralDir {
     uint32_t centralDirSize;
     uint32_t centralDirOffset;
     uint16_t commentLength;
-};
-#pragma pack(pop)
+} PACKED;
+
+#ifndef __GNUC__
+    #pragma pack(pop)
+#endif
+#undef PACKED
 
 std::optional<std::string> JarReader::extractFabricModJson(const std::string& jarPath) {
     return readFileFromZip(jarPath, "fabric.mod.json");
