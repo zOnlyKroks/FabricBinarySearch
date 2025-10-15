@@ -63,11 +63,11 @@ jobs:
             artifact_name: FabricBinarySearch-linux-x64
             binary_name: FabricBinarySearch
 
-          # Linux ARM64
+          # Linux ARM64 (headless - no GUI due to cross-compilation complexity)
           - os: ubuntu-latest
             platform: linux
             arch: arm64
-            cmake_arch: '-DCMAKE_SYSTEM_PROCESSOR=aarch64'
+            cmake_arch: '-DCMAKE_SYSTEM_PROCESSOR=aarch64 -DBUILD_GUI=OFF'
             vcpkg_triplet: arm64-linux
             artifact_name: FabricBinarySearch-linux-arm64
             binary_name: FabricBinarySearch
@@ -81,11 +81,11 @@ jobs:
             artifact_name: FabricBinarySearch-macos-x64
             binary_name: FabricBinarySearch
 
-          # macOS ARM64 (Apple Silicon)
+          # macOS ARM64 (Apple Silicon) - native build on ARM64 runner
           - os: macos-latest
             platform: macos
             arch: arm64
-            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=arm64'
+            cmake_arch: ''
             vcpkg_triplet: arm64-osx
             artifact_name: FabricBinarySearch-macos-arm64
             binary_name: FabricBinarySearch
