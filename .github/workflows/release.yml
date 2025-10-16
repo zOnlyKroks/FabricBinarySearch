@@ -63,6 +63,7 @@ jobs:
             build-essential \
             cmake \
             ninja-build \
+            pkg-config \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
             libx11-dev \
@@ -116,9 +117,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build using Docker (ARM64)
         run: |
           # Create a Dockerfile for ARM64 build
@@ -130,6 +128,7 @@ jobs:
             build-essential \
             cmake \
             ninja-build \
+            pkg-config \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
             libx11-dev \
@@ -142,7 +141,8 @@ jobs:
             wayland-protocols \
             libxkbcommon-dev \
             zlib1g-dev \
-            git
+            git \
+            curl
 
           # Copy source code
           COPY . /workspace
@@ -157,13 +157,16 @@ jobs:
           RUN strip --strip-all build/FabricBinarySearch
           EOF
 
-          # Build the image and extract the binary
-          docker buildx build --platform linux/arm64 -f Dockerfile.arm64 --output type=local,dest=./arm64-build .
+          # Build using regular docker (not buildx)
+          docker build -f Dockerfile.arm64 -t fabric-arm64-build .
+          docker create --name fabric-arm64-container fabric-arm64-build
+          docker cp fabric-arm64-container:/workspace/build/FabricBinarySearch ./fabric-binary-arm64
+          docker rm fabric-arm64-container
 
       - name: Create ARM64 archive
         run: |
           mkdir -p dist
-          cp arm64-build/workspace/build/FabricBinarySearch dist/
+          cp fabric-binary-arm64 dist/FabricBinarySearch
           tar -czf FabricBinarySearch-linux-arm64.tar.gz -C dist .
 
       - name: Upload Release Asset
