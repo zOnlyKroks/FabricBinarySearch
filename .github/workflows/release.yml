@@ -14,11 +14,6 @@ on:
         default: true
 
 env:
-  CC: clang
-  CXX: clang++
-  CFLAGS: '-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG'
-  CXXFLAGS: '-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG'
-  LDFLAGS: '-flto=thin -fuse-ld=lld -s'
   VCPKG_COMMIT: 'c59b04f668d20c7dd83f478835e8266a3cc51270'
 
 jobs:
@@ -63,40 +58,31 @@ jobs:
       matrix:
         include:
           # Linux x64
-          - os: ubuntu-24.04
+          - os: ubuntu-22.04
             platform: linux
             arch: x64
             cmake_arch: ''
             vcpkg_triplet: x64-linux
             artifact_name: FabricBinarySearch-linux-x64
             binary_name: FabricBinarySearch
-            cmake_generator: 'Unix Makefiles'
-            build_tool: make
-            build_args: '-j $(nproc)'
 
           # Linux ARM64
-          - os: ubuntu-24.04
+          - os: ubuntu-22.04
             platform: linux
             arch: arm64
             cmake_arch: ''
             vcpkg_triplet: arm64-linux
             artifact_name: FabricBinarySearch-linux-arm64
             binary_name: FabricBinarySearch
-            cmake_generator: 'Unix Makefiles'
-            build_tool: make
-            build_args: '-j $(nproc)'
 
           # macOS x64 (Intel)
-          - os: macos-14
+          - os: macos-12
             platform: macos
             arch: x64
             cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0'
             vcpkg_triplet: x64-osx
             artifact_name: FabricBinarySearch-macos-x64
             binary_name: FabricBinarySearch
-            cmake_generator: 'Unix Makefiles'
-            build_tool: make
-            build_args: '-j $(sysctl -n hw.ncpu)'
 
           # macOS ARM64 (Apple Silicon)
           - os: macos-14
@@ -106,9 +92,6 @@ jobs:
             vcpkg_triplet: arm64-osx
             artifact_name: FabricBinarySearch-macos-arm64
             binary_name: FabricBinarySearch
-            cmake_generator: 'Unix Makefiles'
-            build_tool: make
-            build_args: '-j $(sysctl -n hw.ncpu)'
 
           # Windows x64
           - os: windows-2022
@@ -118,9 +101,6 @@ jobs:
             vcpkg_triplet: x64-windows-static
             artifact_name: FabricBinarySearch-windows-x64
             binary_name: FabricBinarySearch.exe
-            cmake_generator: 'Visual Studio 17 2022'
-            build_tool: msbuild
-            build_args: '/m /p:Configuration=Release'
 
           # Windows ARM64
           - os: windows-2022
@@ -130,26 +110,12 @@ jobs:
             vcpkg_triplet: arm64-windows-static
             artifact_name: FabricBinarySearch-windows-arm64
             binary_name: FabricBinarySearch.exe
-            cmake_generator: 'Visual Studio 17 2022'
-            build_tool: msbuild
-            build_args: '/m /p:Configuration=Release'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          fetch-depth: 0
-
-      - name: Setup compilation cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/vcpkg
-            build
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', 'CMakeLists.txt') }}-${{ env.VCPKG_COMMIT }}
-          restore-keys: |
-            ${{ runner.os }}-vcpkg-
 
       - name: Install system dependencies
         shell: bash
@@ -163,6 +129,8 @@ jobs:
                 ninja-build \
                 clang \
                 lld \
+                libc++-dev \
+                libc++abi-dev \
                 libgl1-mesa-dev \
                 libglu1-mesa-dev \
                 libx11-dev \
@@ -175,14 +143,15 @@ jobs:
                 wayland-protocols \
                 libxkbcommon-dev \
                 pkg-config \
-                curl
+                curl \
+                7zip
               ;;
             macos)
               brew update
               brew install pkg-config cmake ninja
               ;;
             windows)
-              # Windows dependencies are handled by the runner
+              choco install 7zip -y
               ;;
           esac
 
@@ -191,35 +160,13 @@ jobs:
         with:
           vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
 
-      - name: Setup compilation toolchain
-        shell: bash
-        run: |
-          case ${{ matrix.platform }} in
-            linux|macos)
-              # Use clang and lld for better performance
-              export CC=clang
-              export CXX=clang++
-              export CFLAGS="-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG"
-              export CXXFLAGS="$CFLAGS -stdlib=libc++"
-              export LDFLAGS="-flto=thin -fuse-ld=lld -s"
-              
-              # For macOS, ensure we use the correct SDK
-              if [ "${{ matrix.platform }}" = "macos" ]; then
-                export MACOSX_DEPLOYMENT_TARGET=11.0
-                export SDKROOT=$(xcrun --show-sdk-path)
-              fi
-              ;;
-            windows)
-              # MSVC optimizations are handled by CMake
-              ;;
-          esac
-
       - name: Install vcpkg dependencies
         shell: bash
         run: |
-          ${{ github.workspace }}/vcpkg/vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
+          # Use vcpkg from PATH (the action sets this up)
+          vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
 
-      - name: Configure CMake (Aggressive Optimizations)
+      - name: Configure CMake
         shell: bash
         run: |
           CMAKE_ARGS=(
@@ -231,17 +178,25 @@ jobs:
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
           )
 
-          # Platform-specific optimizations
+          # Platform-specific configurations
           case ${{ matrix.platform }} in
-            linux|macos)
+            linux)
               CMAKE_ARGS+=(
                 "-DCMAKE_C_COMPILER=clang"
                 "-DCMAKE_CXX_COMPILER=clang++"
-                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG"
-                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG -stdlib=libc++"
-                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
-                "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
-                "-DCMAKE_MODULE_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
+                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
+                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
+                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld"
+                "-G" "Ninja"
+              )
+              ;;
+            macos)
+              CMAKE_ARGS+=(
+                "-DCMAKE_C_COMPILER=clang"
+                "-DCMAKE_CXX_COMPILER=clang++"
+                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
+                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG -stdlib=libc++"
+                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld"
                 "-G" "Ninja"
               )
               ;;
@@ -251,6 +206,7 @@ jobs:
                 "-DCMAKE_CXX_FLAGS_RELEASE=/O2 /Ob2 /GL /GS- /Gy /arch:AVX2"
                 "-DCMAKE_EXE_LINKER_FLAGS=/LTCG /OPT:REF /OPT:ICF"
                 "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
+                "-G" "Visual Studio 17 2022"
               )
               ;;
           esac
@@ -261,16 +217,15 @@ jobs:
           echo "CMake arguments: ${CMAKE_ARGS[@]}"
           cmake "${CMAKE_ARGS[@]}"
 
-      - name: Build (Optimized)
+      - name: Build
         shell: bash
         run: |
           case ${{ matrix.platform }} in
             linux|macos)
-              # Use Ninja for faster builds on Unix-like systems
               cmake --build build --config Release --parallel
               ;;
             windows)
-              cmake --build build --config Release --parallel -- ${{ matrix.build_args }}
+              cmake --build build --config Release --parallel
               ;;
           esac
 
@@ -279,7 +234,7 @@ jobs:
         shell: bash
         run: |
           if command -v strip >/dev/null 2>&1; then
-            find build -name "${{ matrix.binary_name }}" -type f -executable -exec strip --strip-all {} \;
+            find build -name "${{ matrix.binary_name }}" -type f -executable -exec strip --strip-all {} \; || true
           fi
 
       - name: Package artifacts
@@ -291,59 +246,50 @@ jobs:
           # Find and copy the binary
           BINARY_FOUND=false
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            POSSIBLE_PATHS=(
-              "build/Release/${{ matrix.binary_name }}"
-              "build/${{ matrix.binary_name }}"
-              "build/Release/*.exe"
-              "build/*.exe"
-            )
+            # Windows search paths
+            if [ -f "build/Release/${{ matrix.binary_name }}" ]; then
+              cp "build/Release/${{ matrix.binary_name }}" dist/
+              BINARY_FOUND=true
+            elif [ -f "build/${{ matrix.binary_name }}" ]; then
+              cp "build/${{ matrix.binary_name }}" dist/
+              BINARY_FOUND=true
+            fi
           else
-            POSSIBLE_PATHS=(
-              "build/${{ matrix.binary_name }}"
-              "build/*"
-            )
+            # Unix search paths
+            if [ -f "build/${{ matrix.binary_name }}" ]; then
+              cp "build/${{ matrix.binary_name }}" dist/
+              BINARY_FOUND=true
+            fi
           fi
 
-          for path in "${POSSIBLE_PATHS[@]}"; do
-            if ls $path 1> /dev/null 2>&1; then
-              echo "Found binary at: $path"
-              cp $path dist/
-              BINARY_FOUND=true
-              break
-            fi
-          done
-
           if [ "$BINARY_FOUND" = "false" ]; then
-            echo "ERROR: Binary not found in any expected location!"
-            echo "Searching entire build directory:"
-            find build -type f -executable 2>/dev/null || find build -name "*.exe" 2>/dev/null
+            echo "ERROR: Binary not found in expected locations!"
+            echo "Searching build directory:"
+            find build -type f -name "*${{ matrix.binary_name }}*" 2>/dev/null || true
             exit 1
           fi
 
-          # Verify and analyze binary
+          # Verify binary
           echo "Binary information:"
           case ${{ matrix.platform }} in
             linux)
-              file dist/*
-              ldd dist/* || true
-              size dist/* || true
+              file dist/* || true
               ;;
             macos)
-              file dist/*
-              otool -L dist/* || true
-              size dist/* || true
+              file dist/* || true
               ;;
             windows)
-              file dist/* || true
+              # file command might not be available on Windows
+              ls -la dist/* || true
               ;;
           esac
 
           # Create archive
           cd dist
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            7z a -mx=9 ../${{ matrix.artifact_name }}.zip *
+            7z a -mx=9 ../${{ matrix.artifact_name }}.zip * || zip -r ../${{ matrix.artifact_name }}.zip ./*
           else
-            tar -czf ../${{ matrix.artifact_name }}.tar.gz --owner=0 --group=0 --numeric-owner *
+            tar -czf ../${{ matrix.artifact_name }}.tar.gz --owner=0 --group=0 --numeric-owner ./*
           fi
           cd ..
 
