@@ -13,6 +13,14 @@ on:
         type: boolean
         default: true
 
+env:
+  CC: clang
+  CXX: clang++
+  CFLAGS: '-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG'
+  CXXFLAGS: '-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG'
+  LDFLAGS: '-flto=thin -fuse-ld=lld -s'
+  VCPKG_COMMIT: 'c59b04f668d20c7dd83f478835e8266a3cc51270'
+
 jobs:
   create-release:
     name: Create Release
@@ -55,155 +63,324 @@ jobs:
       matrix:
         include:
           # Linux x64
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             platform: linux
             arch: x64
             cmake_arch: ''
             vcpkg_triplet: x64-linux
             artifact_name: FabricBinarySearch-linux-x64
             binary_name: FabricBinarySearch
+            cmake_generator: 'Unix Makefiles'
+            build_tool: make
+            build_args: '-j $(nproc)'
+
+          # Linux ARM64
+          - os: ubuntu-24.04
+            platform: linux
+            arch: arm64
+            cmake_arch: ''
+            vcpkg_triplet: arm64-linux
+            artifact_name: FabricBinarySearch-linux-arm64
+            binary_name: FabricBinarySearch
+            cmake_generator: 'Unix Makefiles'
+            build_tool: make
+            build_args: '-j $(nproc)'
 
           # macOS x64 (Intel)
-          - os: macos-13
+          - os: macos-14
             platform: macos
             arch: x64
-            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64'
+            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0'
             vcpkg_triplet: x64-osx
             artifact_name: FabricBinarySearch-macos-x64
             binary_name: FabricBinarySearch
+            cmake_generator: 'Unix Makefiles'
+            build_tool: make
+            build_args: '-j $(sysctl -n hw.ncpu)'
 
-          # macOS ARM64 (Apple Silicon) - native build on ARM64 runner
-          - os: macos-latest
+          # macOS ARM64 (Apple Silicon)
+          - os: macos-14
             platform: macos
             arch: arm64
-            cmake_arch: ''
+            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0'
             vcpkg_triplet: arm64-osx
             artifact_name: FabricBinarySearch-macos-arm64
             binary_name: FabricBinarySearch
+            cmake_generator: 'Unix Makefiles'
+            build_tool: make
+            build_args: '-j $(sysctl -n hw.ncpu)'
 
           # Windows x64
-          - os: windows-latest
+          - os: windows-2022
             platform: windows
             arch: x64
             cmake_arch: '-A x64'
             vcpkg_triplet: x64-windows-static
             artifact_name: FabricBinarySearch-windows-x64
             binary_name: FabricBinarySearch.exe
+            cmake_generator: 'Visual Studio 17 2022'
+            build_tool: msbuild
+            build_args: '/m /p:Configuration=Release'
 
           # Windows ARM64
-          - os: windows-latest
+          - os: windows-2022
             platform: windows
             arch: arm64
             cmake_arch: '-A ARM64'
             vcpkg_triplet: arm64-windows-static
             artifact_name: FabricBinarySearch-windows-arm64
             binary_name: FabricBinarySearch.exe
+            cmake_generator: 'Visual Studio 17 2022'
+            build_tool: msbuild
+            build_args: '/m /p:Configuration=Release'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup compilation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/vcpkg
+            build
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', 'CMakeLists.txt') }}-${{ env.VCPKG_COMMIT }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
+      - name: Install system dependencies
+        shell: bash
+        run: |
+          case ${{ matrix.platform }} in
+            linux)
+              sudo apt-get update
+              sudo apt-get install -y \
+                build-essential \
+                cmake \
+                ninja-build \
+                clang \
+                lld \
+                libgl1-mesa-dev \
+                libglu1-mesa-dev \
+                libx11-dev \
+                libxrandr-dev \
+                libxinerama-dev \
+                libxcursor-dev \
+                libxi-dev \
+                libxxf86vm-dev \
+                libwayland-dev \
+                wayland-protocols \
+                libxkbcommon-dev \
+                pkg-config \
+                curl
+              ;;
+            macos)
+              brew update
+              brew install pkg-config cmake ninja
+              ;;
+            windows)
+              # Windows dependencies are handled by the runner
+              ;;
+          esac
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: 'c59b04f668d20c7dd83f478835e8266a3cc51270'
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
 
-      - name: Install Linux dependencies
-        if: matrix.platform == 'linux'
+      - name: Setup compilation toolchain
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            libgl1-mesa-dev \
-            libglu1-mesa-dev \
-            libx11-dev \
-            libxrandr-dev \
-            libxinerama-dev \
-            libxcursor-dev \
-            libxi-dev \
-            libxxf86vm-dev \
-            libwayland-dev \
-            wayland-protocols \
-            libxkbcommon-dev
+          case ${{ matrix.platform }} in
+            linux|macos)
+              # Use clang and lld for better performance
+              export CC=clang
+              export CXX=clang++
+              export CFLAGS="-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG"
+              export CXXFLAGS="$CFLAGS -stdlib=libc++"
+              export LDFLAGS="-flto=thin -fuse-ld=lld -s"
+              
+              # For macOS, ensure we use the correct SDK
+              if [ "${{ matrix.platform }}" = "macos" ]; then
+                export MACOSX_DEPLOYMENT_TARGET=11.0
+                export SDKROOT=$(xcrun --show-sdk-path)
+              fi
+              ;;
+            windows)
+              # MSVC optimizations are handled by CMake
+              ;;
+          esac
 
       - name: Install vcpkg dependencies
+        shell: bash
         run: |
           ${{ github.workspace }}/vcpkg/vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
 
-      - name: Configure CMake
+      - name: Configure CMake (Aggressive Optimizations)
+        shell: bash
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }} ${{ matrix.cmake_arch }}
+          CMAKE_ARGS=(
+            "-B" "build"
+            "-DCMAKE_BUILD_TYPE=Release"
+            "-DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+            "-DVCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}"
+            "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+          )
 
-      - name: Build
-        run: cmake --build build --config Release
+          # Platform-specific optimizations
+          case ${{ matrix.platform }} in
+            linux|macos)
+              CMAKE_ARGS+=(
+                "-DCMAKE_C_COMPILER=clang"
+                "-DCMAKE_CXX_COMPILER=clang++"
+                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG"
+                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -ffast-math -DNDEBUG -stdlib=libc++"
+                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
+                "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
+                "-DCMAKE_MODULE_LINKER_FLAGS=-flto=thin -fuse-ld=lld -s"
+                "-G" "Ninja"
+              )
+              ;;
+            windows)
+              CMAKE_ARGS+=(
+                "-DCMAKE_C_FLAGS_RELEASE=/O2 /Ob2 /GL /GS- /Gy /arch:AVX2"
+                "-DCMAKE_CXX_FLAGS_RELEASE=/O2 /Ob2 /GL /GS- /Gy /arch:AVX2"
+                "-DCMAKE_EXE_LINKER_FLAGS=/LTCG /OPT:REF /OPT:ICF"
+                "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
+              )
+              ;;
+          esac
+
+          # Add architecture-specific flags
+          CMAKE_ARGS+=(${{ matrix.cmake_arch }})
+
+          echo "CMake arguments: ${CMAKE_ARGS[@]}"
+          cmake "${CMAKE_ARGS[@]}"
+
+      - name: Build (Optimized)
+        shell: bash
+        run: |
+          case ${{ matrix.platform }} in
+            linux|macos)
+              # Use Ninja for faster builds on Unix-like systems
+              cmake --build build --config Release --parallel
+              ;;
+            windows)
+              cmake --build build --config Release --parallel -- ${{ matrix.build_args }}
+              ;;
+          esac
+
+      - name: Strip binaries (Unix)
+        if: matrix.platform != 'windows'
+        shell: bash
+        run: |
+          if command -v strip >/dev/null 2>&1; then
+            find build -name "${{ matrix.binary_name }}" -type f -executable -exec strip --strip-all {} \;
+          fi
 
       - name: Package artifacts
         shell: bash
         run: |
-          # Debug: Show what was built
-          echo "Contents of build directory:"
-          ls -la build/ || true
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            ls -la build/Release/ || true
-          fi
+          # Create distribution directory
+          mkdir -p dist
 
           # Find and copy the binary
-          mkdir -p dist
+          BINARY_FOUND=false
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            if [ -f "build/Release/${{ matrix.binary_name }}" ]; then
-              cp build/Release/${{ matrix.binary_name }} dist/
-              echo "Copied from build/Release/"
-            elif [ -f "build/${{ matrix.binary_name }}" ]; then
-              cp build/${{ matrix.binary_name }} dist/
-              echo "Copied from build/"
-            else
-              echo "ERROR: Binary not found!"
-              exit 1
-            fi
+            POSSIBLE_PATHS=(
+              "build/Release/${{ matrix.binary_name }}"
+              "build/${{ matrix.binary_name }}"
+              "build/Release/*.exe"
+              "build/*.exe"
+            )
           else
-            if [ -f "build/${{ matrix.binary_name }}" ]; then
-              cp build/${{ matrix.binary_name }} dist/
-              echo "Copied from build/"
-            else
-              echo "ERROR: Binary not found!"
-              exit 1
-            fi
+            POSSIBLE_PATHS=(
+              "build/${{ matrix.binary_name }}"
+              "build/*"
+            )
           fi
 
-          # Verify binary was copied
-          echo "Contents of dist:"
-          ls -la dist/
+          for path in "${POSSIBLE_PATHS[@]}"; do
+            if ls $path 1> /dev/null 2>&1; then
+              echo "Found binary at: $path"
+              cp $path dist/
+              BINARY_FOUND=true
+              break
+            fi
+          done
+
+          if [ "$BINARY_FOUND" = "false" ]; then
+            echo "ERROR: Binary not found in any expected location!"
+            echo "Searching entire build directory:"
+            find build -type f -executable 2>/dev/null || find build -name "*.exe" 2>/dev/null
+            exit 1
+          fi
+
+          # Verify and analyze binary
+          echo "Binary information:"
+          case ${{ matrix.platform }} in
+            linux)
+              file dist/*
+              ldd dist/* || true
+              size dist/* || true
+              ;;
+            macos)
+              file dist/*
+              otool -L dist/* || true
+              size dist/* || true
+              ;;
+            windows)
+              file dist/* || true
+              ;;
+          esac
 
           # Create archive
           cd dist
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            7z a ../${{ matrix.artifact_name }}.zip *
+            7z a -mx=9 ../${{ matrix.artifact_name }}.zip *
           else
-            tar -czf ../${{ matrix.artifact_name }}.tar.gz *
+            tar -czf ../${{ matrix.artifact_name }}.tar.gz --owner=0 --group=0 --numeric-owner *
           fi
           cd ..
 
-          # Verify archive was created
           echo "Archive created:"
           ls -lh ${{ matrix.artifact_name }}.*
 
       - name: Upload Release Asset
-        shell: bash
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            gh release upload ${{ github.event.inputs.version }} ${{ matrix.artifact_name }}.zip --clobber
-          else
-            gh release upload ${{ github.event.inputs.version }} ${{ matrix.artifact_name }}.tar.gz --clobber
-          fi
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ${{ matrix.artifact_name }}.${{ matrix.platform == 'windows' && 'zip' || 'tar.gz' }}
+          asset_name: ${{ matrix.artifact_name }}.${{ matrix.platform == 'windows' && 'zip' || 'tar.gz' }}
+          asset_content_type: ${{ matrix.platform == 'windows' && 'application/zip' || 'application/gzip' }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
-          path: dist/*
+          path: |
+            ${{ matrix.artifact_name }}.*
+            dist/*
           retention-days: 7
+          compression-level: 9
+
+  finalize-release:
+    name: Finalize Release
+    needs: [create-release, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: always()
+    steps:
+      - name: Update release notes
+        if: needs.build.result == 'success'
+        run: |
+          echo "All builds completed successfully for version ${{ github.event.inputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
