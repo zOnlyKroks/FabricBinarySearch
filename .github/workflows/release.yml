@@ -13,9 +13,6 @@ on:
         type: boolean
         default: true
 
-env:
-  VCPKG_COMMIT: 'c59b04f668d20c7dd83f478835e8266a3cc51270'
-
 jobs:
   create-release:
     name: Create Release
@@ -47,254 +44,49 @@ jobs:
           draft: ${{ github.event.inputs.draft }}
           prerelease: false
 
-  build:
-    name: Build ${{ matrix.platform }} ${{ matrix.arch }}
+  build-linux-x64:
+    name: Build Linux x64
     needs: create-release
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # Linux x64
-          - os: ubuntu-22.04
-            platform: linux
-            arch: x64
-            cmake_arch: ''
-            vcpkg_triplet: x64-linux
-            artifact_name: FabricBinarySearch-linux-x64
-            binary_name: FabricBinarySearch
-
-          # Linux ARM64
-          - os: ubuntu-22.04
-            platform: linux
-            arch: arm64
-            cmake_arch: ''
-            vcpkg_triplet: arm64-linux
-            artifact_name: FabricBinarySearch-linux-arm64
-            binary_name: FabricBinarySearch
-
-          # macOS x64 (Intel)
-          - os: macos-12
-            platform: macos
-            arch: x64
-            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0'
-            vcpkg_triplet: x64-osx
-            artifact_name: FabricBinarySearch-macos-x64
-            binary_name: FabricBinarySearch
-
-          # macOS ARM64 (Apple Silicon)
-          - os: macos-14
-            platform: macos
-            arch: arm64
-            cmake_arch: '-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0'
-            vcpkg_triplet: arm64-osx
-            artifact_name: FabricBinarySearch-macos-arm64
-            binary_name: FabricBinarySearch
-
-          # Windows x64
-          - os: windows-2022
-            platform: windows
-            arch: x64
-            cmake_arch: '-A x64'
-            vcpkg_triplet: x64-windows-static
-            artifact_name: FabricBinarySearch-windows-x64
-            binary_name: FabricBinarySearch.exe
-
-          # Windows ARM64
-          - os: windows-2022
-            platform: windows
-            arch: arm64
-            cmake_arch: '-A ARM64'
-            vcpkg_triplet: arm64-windows-static
-            artifact_name: FabricBinarySearch-windows-arm64
-            binary_name: FabricBinarySearch.exe
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Install system dependencies
-        shell: bash
+      - name: Install dependencies
         run: |
-          case ${{ matrix.platform }} in
-            linux)
-              sudo apt-get update
-              sudo apt-get install -y \
-                build-essential \
-                cmake \
-                ninja-build \
-                clang \
-                lld \
-                libc++-dev \
-                libc++abi-dev \
-                libgl1-mesa-dev \
-                libglu1-mesa-dev \
-                libx11-dev \
-                libxrandr-dev \
-                libxinerama-dev \
-                libxcursor-dev \
-                libxi-dev \
-                libxxf86vm-dev \
-                libwayland-dev \
-                wayland-protocols \
-                libxkbcommon-dev \
-                pkg-config \
-                curl \
-                7zip
-              ;;
-            macos)
-              brew update
-              brew install pkg-config cmake ninja
-              ;;
-            windows)
-              choco install 7zip -y
-              ;;
-          esac
-
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
-
-      - name: Install vcpkg dependencies
-        shell: bash
-        run: |
-          # Use vcpkg from PATH (the action sets this up)
-          vcpkg install zlib --triplet=${{ matrix.vcpkg_triplet }}
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxxf86vm-dev
 
       - name: Configure CMake
-        shell: bash
         run: |
-          CMAKE_ARGS=(
-            "-B" "build"
-            "-DCMAKE_BUILD_TYPE=Release"
-            "-DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-            "-DVCPKG_TARGET_TRIPLET=${{ matrix.vcpkg_triplet }}"
-            "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
-            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
-          )
-
-          # Platform-specific configurations
-          case ${{ matrix.platform }} in
-            linux)
-              CMAKE_ARGS+=(
-                "-DCMAKE_C_COMPILER=clang"
-                "-DCMAKE_CXX_COMPILER=clang++"
-                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
-                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
-                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld"
-                "-G" "Ninja"
-              )
-              ;;
-            macos)
-              CMAKE_ARGS+=(
-                "-DCMAKE_C_COMPILER=clang"
-                "-DCMAKE_CXX_COMPILER=clang++"
-                "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
-                "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=native -flto=thin -fomit-frame-pointer -fstrict-aliasing -DNDEBUG -stdlib=libc++"
-                "-DCMAKE_EXE_LINKER_FLAGS=-flto=thin -fuse-ld=lld"
-                "-G" "Ninja"
-              )
-              ;;
-            windows)
-              CMAKE_ARGS+=(
-                "-DCMAKE_C_FLAGS_RELEASE=/O2 /Ob2 /GL /GS- /Gy /arch:AVX2"
-                "-DCMAKE_CXX_FLAGS_RELEASE=/O2 /Ob2 /GL /GS- /Gy /arch:AVX2"
-                "-DCMAKE_EXE_LINKER_FLAGS=/LTCG /OPT:REF /OPT:ICF"
-                "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
-                "-G" "Visual Studio 17 2022"
-              )
-              ;;
-          esac
-
-          # Add architecture-specific flags
-          CMAKE_ARGS+=(${{ matrix.cmake_arch }})
-
-          echo "CMake arguments: ${CMAKE_ARGS[@]}"
-          cmake "${CMAKE_ARGS[@]}"
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja
 
       - name: Build
-        shell: bash
-        run: |
-          case ${{ matrix.platform }} in
-            linux|macos)
-              cmake --build build --config Release --parallel
-              ;;
-            windows)
-              cmake --build build --config Release --parallel
-              ;;
-          esac
+        run: cmake --build build --config Release --parallel
 
-      - name: Strip binaries (Unix)
-        if: matrix.platform != 'windows'
-        shell: bash
-        run: |
-          if command -v strip >/dev/null 2>&1; then
-            find build -name "${{ matrix.binary_name }}" -type f -executable -exec strip --strip-all {} \; || true
-          fi
+      - name: Strip binary
+        run: strip --strip-all build/FabricBinarySearch
 
-      - name: Package artifacts
-        shell: bash
+      - name: Create archive
         run: |
-          # Create distribution directory
           mkdir -p dist
-
-          # Find and copy the binary
-          BINARY_FOUND=false
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            # Windows search paths
-            if [ -f "build/Release/${{ matrix.binary_name }}" ]; then
-              cp "build/Release/${{ matrix.binary_name }}" dist/
-              BINARY_FOUND=true
-            elif [ -f "build/${{ matrix.binary_name }}" ]; then
-              cp "build/${{ matrix.binary_name }}" dist/
-              BINARY_FOUND=true
-            fi
-          else
-            # Unix search paths
-            if [ -f "build/${{ matrix.binary_name }}" ]; then
-              cp "build/${{ matrix.binary_name }}" dist/
-              BINARY_FOUND=true
-            fi
-          fi
-
-          if [ "$BINARY_FOUND" = "false" ]; then
-            echo "ERROR: Binary not found in expected locations!"
-            echo "Searching build directory:"
-            find build -type f -name "*${{ matrix.binary_name }}*" 2>/dev/null || true
-            exit 1
-          fi
-
-          # Verify binary
-          echo "Binary information:"
-          case ${{ matrix.platform }} in
-            linux)
-              file dist/* || true
-              ;;
-            macos)
-              file dist/* || true
-              ;;
-            windows)
-              # file command might not be available on Windows
-              ls -la dist/* || true
-              ;;
-          esac
-
-          # Create archive
-          cd dist
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            7z a -mx=9 ../${{ matrix.artifact_name }}.zip * || zip -r ../${{ matrix.artifact_name }}.zip ./*
-          else
-            tar -czf ../${{ matrix.artifact_name }}.tar.gz --owner=0 --group=0 --numeric-owner ./*
-          fi
-          cd ..
-
-          echo "Archive created:"
-          ls -lh ${{ matrix.artifact_name }}.*
+          cp build/FabricBinarySearch dist/
+          tar -czf FabricBinarySearch-linux-x64.tar.gz -C dist .
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -302,31 +94,180 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ matrix.artifact_name }}.${{ matrix.platform == 'windows' && 'zip' || 'tar.gz' }}
-          asset_name: ${{ matrix.artifact_name }}.${{ matrix.platform == 'windows' && 'zip' || 'tar.gz' }}
-          asset_content_type: ${{ matrix.platform == 'windows' && 'application/zip' || 'application/gzip' }}
+          asset_path: FabricBinarySearch-linux-x64.tar.gz
+          asset_name: FabricBinarySearch-linux-x64.tar.gz
+          asset_content_type: application/gzip
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+  build-macos-x64:
+    name: Build macOS x64
+    needs: create-release
+    runs-on: macos-13
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: |
-            ${{ matrix.artifact_name }}.*
-            dist/*
-          retention-days: 7
-          compression-level: 9
+          submodules: recursive
+
+      - name: Install dependencies
+        run: brew install pkg-config cmake ninja
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -G Ninja
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Strip binary
+        run: strip build/FabricBinarySearch
+
+      - name: Create archive
+        run: |
+          mkdir -p dist
+          cp build/FabricBinarySearch dist/
+          tar -czf FabricBinarySearch-macos-x64.tar.gz -C dist .
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: FabricBinarySearch-macos-x64.tar.gz
+          asset_name: FabricBinarySearch-macos-x64.tar.gz
+          asset_content_type: application/gzip
+
+  build-macos-arm64:
+    name: Build macOS ARM64
+    needs: create-release
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: brew install pkg-config cmake ninja
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -G Ninja
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Strip binary
+        run: strip build/FabricBinarySearch
+
+      - name: Create archive
+        run: |
+          mkdir -p dist
+          cp build/FabricBinarySearch dist/
+          tar -czf FabricBinarySearch-macos-arm64.tar.gz -C dist .
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: FabricBinarySearch-macos-arm64.tar.gz
+          asset_name: FabricBinarySearch-macos-arm64.tar.gz
+          asset_content_type: application/gzip
+
+  build-windows-x64:
+    name: Build Windows x64
+    needs: create-release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -A x64
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Create archive
+        run: |
+          mkdir -p dist
+          cp build/Release/FabricBinarySearch.exe dist/
+          7z a FabricBinarySearch-windows-x64.zip .\dist\*
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: FabricBinarySearch-windows-x64.zip
+          asset_name: FabricBinarySearch-windows-x64.zip
+          asset_content_type: application/zip
+
+  build-windows-arm64:
+    name: Build Windows ARM64
+    needs: create-release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -A ARM64
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Create archive
+        run: |
+          mkdir -p dist
+          cp build/Release/FabricBinarySearch.exe dist/
+          7z a FabricBinarySearch-windows-arm64.zip .\dist\*
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: FabricBinarySearch-windows-arm64.zip
+          asset_name: FabricBinarySearch-windows-arm64.zip
+          asset_content_type: application/zip
 
   finalize-release:
     name: Finalize Release
-    needs: [create-release, build]
+    needs: 
+      - create-release
+      - build-linux-x64
+      - build-macos-x64
+      - build-macos-arm64
+      - build-windows-x64
+      - build-windows-arm64
     runs-on: ubuntu-latest
     permissions:
       contents: write
     if: always()
     steps:
-      - name: Update release notes
-        if: needs.build.result == 'success'
+      - name: Update release status
         run: |
-          echo "All builds completed successfully for version ${{ github.event.inputs.version }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if ${{ needs.build-linux-x64.result == 'success' && needs.build-macos-x64.result == 'success' && needs.build-macos-arm64.result == 'success' && needs.build-windows-x64.result == 'success' && needs.build-windows-arm64.result == 'success' }}; then
+            echo "All builds completed successfully!"
+          else
+            echo "Some builds failed. Check the logs."
+          fi
