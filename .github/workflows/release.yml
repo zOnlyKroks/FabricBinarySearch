@@ -56,7 +56,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Linux dependencies (with Wayland)
+      - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -74,9 +74,7 @@ jobs:
             libwayland-dev \
             wayland-protocols \
             libxkbcommon-dev \
-            zlib1g-dev \
-            pkg-config \
-            curl
+            zlib1g-dev
 
       - name: Configure CMake (Optimized)
         run: |
@@ -118,18 +116,20 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup QEMU for ARM64
-        uses: docker/setup-qemu-action@v3
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Install cross-compilation dependencies
+      - name: Build using Docker (ARM64)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          # Create a Dockerfile for ARM64 build
+          cat > Dockerfile.arm64 << 'EOF'
+          FROM arm64v8/ubuntu:22.04
+
+          # Install dependencies
+          RUN apt-get update && apt-get install -y \
             build-essential \
             cmake \
             ninja-build \
-            gcc-aarch64-linux-gnu \
-            g++-aarch64-linux-gnu \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
             libx11-dev \
@@ -141,27 +141,29 @@ jobs:
             libwayland-dev \
             wayland-protocols \
             libxkbcommon-dev \
-            zlib1g-dev
+            zlib1g-dev \
+            git
 
-      - name: Configure CMake for ARM64 (Optimized)
-        run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
-            -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
-            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
-            -DCMAKE_C_FLAGS_RELEASE="-O3 -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
-            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
-            -DCMAKE_SYSTEM_PROCESSOR=aarch64
+          # Copy source code
+          COPY . /workspace
+          WORKDIR /workspace
 
-      - name: Build ARM64
-        run: cmake --build build --config Release --parallel
+          # Build
+          RUN cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
 
-      - name: Strip binary
-        run: aarch64-linux-gnu-strip --strip-all build/FabricBinarySearch
+          RUN cmake --build build --config Release --parallel
+          RUN strip --strip-all build/FabricBinarySearch
+          EOF
 
-      - name: Create archive
+          # Build the image and extract the binary
+          docker buildx build --platform linux/arm64 -f Dockerfile.arm64 --output type=local,dest=./arm64-build .
+
+      - name: Create ARM64 archive
         run: |
           mkdir -p dist
-          cp build/FabricBinarySearch dist/
+          cp arm64-build/workspace/build/FabricBinarySearch dist/
           tar -czf FabricBinarySearch-linux-arm64.tar.gz -C dist .
 
       - name: Upload Release Asset
@@ -274,7 +276,6 @@ jobs:
 
       - name: Install vcpkg and zlib
         run: |
-          # Clone vcpkg
           git clone https://github.com/Microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
           .\vcpkg\vcpkg install zlib:x64-windows-static
@@ -321,7 +322,6 @@ jobs:
 
       - name: Install vcpkg and zlib
         run: |
-          # Clone vcpkg
           git clone https://github.com/Microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
           .\vcpkg\vcpkg install zlib:arm64-windows-static
