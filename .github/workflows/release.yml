@@ -70,11 +70,14 @@ jobs:
             libxinerama-dev \
             libxcursor-dev \
             libxi-dev \
-            libxxf86vm-dev
+            libxxf86vm-dev \
+            zlib1g-dev
 
-      - name: Configure CMake
+      - name: Configure CMake (Optimized)
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
 
       - name: Build
         run: cmake --build build --config Release --parallel
@@ -113,9 +116,11 @@ jobs:
       - name: Install dependencies
         run: brew install pkg-config cmake ninja
 
-      - name: Configure CMake
+      - name: Configure CMake (Optimized)
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -G Ninja
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -G Ninja \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG -stdlib=libc++"
 
       - name: Build
         run: cmake --build build --config Release --parallel
@@ -152,11 +157,13 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies
-        run: brew install pkg-config cmake ninja
+        run: brew install pkg-config cmake ninja zlib
 
-      - name: Configure CMake
+      - name: Configure CMake (Optimized)
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -G Ninja
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64 -G Ninja \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -march=native -flto -fomit-frame-pointer -fstrict-aliasing -DNDEBUG -stdlib=libc++"
 
       - name: Build
         run: cmake --build build --config Release --parallel
@@ -192,18 +199,30 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure CMake
+      - name: Install vcpkg and zlib
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -A x64
+          # Clone vcpkg
+          git clone https://github.com/Microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg install zlib:x64-windows-static
+
+      - name: Configure CMake (Optimized)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -A x64 `
+            -DCMAKE_TOOLCHAIN_FILE="$pwd\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+            -DCMAKE_C_FLAGS_RELEASE="/O2 /Ob2 /GL /GS- /Gy /arch:AVX2" `
+            -DCMAKE_CXX_FLAGS_RELEASE="/O2 /Ob2 /GL /GS- /Gy /arch:AVX2" `
+            -DCMAKE_EXE_LINKER_FLAGS="/LTCG /OPT:REF /OPT:ICF"
 
       - name: Build
         run: cmake --build build --config Release --parallel
 
       - name: Create archive
         run: |
-          mkdir -p dist
-          cp build/Release/FabricBinarySearch.exe dist/
-          7z a FabricBinarySearch-windows-x64.zip .\dist\*
+          New-Item -ItemType Directory -Path dist -Force
+          Copy-Item "build\Release\FabricBinarySearch.exe" -Destination "dist\"
+          Compress-Archive -Path "dist\*" -DestinationPath "FabricBinarySearch-windows-x64.zip" -CompressionLevel Optimal
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -227,18 +246,30 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure CMake
+      - name: Install vcpkg and zlib
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -A ARM64
+          # Clone vcpkg
+          git clone https://github.com/Microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg install zlib:arm64-windows-static
+
+      - name: Configure CMake (Optimized)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -A ARM64 `
+            -DCMAKE_TOOLCHAIN_FILE="$pwd\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=arm64-windows-static `
+            -DCMAKE_C_FLAGS_RELEASE="/O2 /Ob2 /GL /GS- /Gy" `
+            -DCMAKE_CXX_FLAGS_RELEASE="/O2 /Ob2 /GL /GS- /Gy" `
+            -DCMAKE_EXE_LINKER_FLAGS="/LTCG /OPT:REF /OPT:ICF"
 
       - name: Build
         run: cmake --build build --config Release --parallel
 
       - name: Create archive
         run: |
-          mkdir -p dist
-          cp build/Release/FabricBinarySearch.exe dist/
-          7z a FabricBinarySearch-windows-arm64.zip .\dist\*
+          New-Item -ItemType Directory -Path dist -Force
+          Copy-Item "build\Release\FabricBinarySearch.exe" -Destination "dist\"
+          Compress-Archive -Path "dist\*" -DestinationPath "FabricBinarySearch-windows-arm64.zip" -CompressionLevel Optimal
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
