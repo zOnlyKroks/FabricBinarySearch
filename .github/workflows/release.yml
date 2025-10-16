@@ -117,56 +117,48 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build using Docker (ARM64)
+      - name: Setup QEMU for ARM64
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build using Ubuntu ARM64 image
         run: |
-          # Create a Dockerfile for ARM64 build
-          cat > Dockerfile.arm64 << 'EOF'
-          FROM arm64v8/ubuntu:22.04
-
-          # Install dependencies
-          RUN apt-get update && apt-get install -y \
-            build-essential \
-            cmake \
-            ninja-build \
-            pkg-config \
-            libgl1-mesa-dev \
-            libglu1-mesa-dev \
-            libx11-dev \
-            libxrandr-dev \
-            libxinerama-dev \
-            libxcursor-dev \
-            libxi-dev \
-            libxxf86vm-dev \
-            libwayland-dev \
-            wayland-protocols \
-            libxkbcommon-dev \
-            zlib1g-dev \
-            git \
-            curl
-
-          # Copy source code
-          COPY . /workspace
-          WORKDIR /workspace
-
-          # Build
-          RUN cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
-            -DCMAKE_C_FLAGS_RELEASE="-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
-            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG"
-
-          RUN cmake --build build --config Release --parallel
-          RUN strip --strip-all build/FabricBinarySearch
-          EOF
-
-          # Build using regular docker (not buildx)
-          docker build -f Dockerfile.arm64 -t fabric-arm64-build .
-          docker create --name fabric-arm64-container fabric-arm64-build
-          docker cp fabric-arm64-container:/workspace/build/FabricBinarySearch ./fabric-binary-arm64
-          docker rm fabric-arm64-container
+          # Use the official Ubuntu multi-arch image
+          docker run --rm \
+            --platform linux/arm64 \
+            -v $PWD:/workspace \
+            -w /workspace \
+            ubuntu:22.04 \
+            /bin/bash -c "
+            apt-get update && \
+            apt-get install -y \
+              build-essential \
+              cmake \
+              ninja-build \
+              pkg-config \
+              libgl1-mesa-dev \
+              libglu1-mesa-dev \
+              libx11-dev \
+              libxrandr-dev \
+              libxinerama-dev \
+              libxcursor-dev \
+              libxi-dev \
+              libxxf86vm-dev \
+              libwayland-dev \
+              wayland-protocols \
+              libxkbcommon-dev \
+              zlib1g-dev \
+              git && \
+            cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
+              -DCMAKE_C_FLAGS_RELEASE='-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG' \
+              -DCMAKE_CXX_FLAGS_RELEASE='-O3 -march=native -fomit-frame-pointer -fstrict-aliasing -DNDEBUG' && \
+            cmake --build build --config Release --parallel && \
+            strip --strip-all build/FabricBinarySearch
+            "
 
       - name: Create ARM64 archive
         run: |
           mkdir -p dist
-          cp fabric-binary-arm64 dist/FabricBinarySearch
+          cp build/FabricBinarySearch dist/
           tar -czf FabricBinarySearch-linux-arm64.tar.gz -C dist .
 
       - name: Upload Release Asset
