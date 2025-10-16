@@ -56,7 +56,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies
+      - name: Install Linux dependencies (with Wayland)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -71,7 +71,12 @@ jobs:
             libxcursor-dev \
             libxi-dev \
             libxxf86vm-dev \
-            zlib1g-dev
+            libwayland-dev \
+            wayland-protocols \
+            libxkbcommon-dev \
+            zlib1g-dev \
+            pkg-config \
+            curl
 
       - name: Configure CMake (Optimized)
         run: |
@@ -99,6 +104,74 @@ jobs:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
           asset_path: FabricBinarySearch-linux-x64.tar.gz
           asset_name: FabricBinarySearch-linux-x64.tar.gz
+          asset_content_type: application/gzip
+
+  build-linux-arm64:
+    name: Build Linux ARM64
+    needs: create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup QEMU for ARM64
+        uses: docker/setup-qemu-action@v3
+
+      - name: Install cross-compilation dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxxf86vm-dev \
+            libwayland-dev \
+            wayland-protocols \
+            libxkbcommon-dev \
+            zlib1g-dev
+
+      - name: Configure CMake for ARM64 (Optimized)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -G Ninja \
+            -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fomit-frame-pointer -fstrict-aliasing -DNDEBUG" \
+            -DCMAKE_SYSTEM_PROCESSOR=aarch64
+
+      - name: Build ARM64
+        run: cmake --build build --config Release --parallel
+
+      - name: Strip binary
+        run: aarch64-linux-gnu-strip --strip-all build/FabricBinarySearch
+
+      - name: Create archive
+        run: |
+          mkdir -p dist
+          cp build/FabricBinarySearch dist/
+          tar -czf FabricBinarySearch-linux-arm64.tar.gz -C dist .
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: FabricBinarySearch-linux-arm64.tar.gz
+          asset_name: FabricBinarySearch-linux-arm64.tar.gz
           asset_content_type: application/gzip
 
   build-macos-x64:
@@ -157,7 +230,7 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies
-        run: brew install pkg-config cmake ninja zlib
+        run: brew install pkg-config cmake ninja
 
       - name: Configure CMake (Optimized)
         run: |
@@ -286,6 +359,7 @@ jobs:
     needs: 
       - create-release
       - build-linux-x64
+      - build-linux-arm64
       - build-macos-x64
       - build-macos-arm64
       - build-windows-x64
@@ -297,8 +371,10 @@ jobs:
     steps:
       - name: Update release status
         run: |
-          if ${{ needs.build-linux-x64.result == 'success' && needs.build-macos-x64.result == 'success' && needs.build-macos-arm64.result == 'success' && needs.build-windows-x64.result == 'success' && needs.build-windows-arm64.result == 'success' }}; then
-            echo "All builds completed successfully!"
-          else
-            echo "Some builds failed. Check the logs."
-          fi
+          echo "Build status:"
+          echo "Linux x64: ${{ needs.build-linux-x64.result }}"
+          echo "Linux ARM64: ${{ needs.build-linux-arm64.result }}"
+          echo "macOS x64: ${{ needs.build-macos-x64.result }}"
+          echo "macOS ARM64: ${{ needs.build-macos-arm64.result }}"
+          echo "Windows x64: ${{ needs.build-windows-x64.result }}"
+          echo "Windows ARM64: ${{ needs.build-windows-arm64.result }}"
